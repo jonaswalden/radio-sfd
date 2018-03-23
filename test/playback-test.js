@@ -6,6 +6,11 @@ const addTimeout = require("./helpers/addTimeout");
 const ck = require("chronokinesis");
 const navigateTo = require("./helpers/navigateTo");
 
+test.after(() => {
+  delete global.window;
+  ck.reset();
+});
+
 let browser, audio, timeouts;
 test.serial("loads document", async t => {
   browser = await navigateTo("./index.html");
@@ -34,6 +39,7 @@ test.serial("scripts are loaded at 09:00", t => {
   t.plan(0);
 
   ck.freeze("2012-04-02 09:00");
+  global.window = browser.window;
   require("../scripts/main");
 });
 
@@ -89,5 +95,3 @@ test.serial("afterwards playback continues with track 1 at 20 s on 70% volume", 
   t.is(audio.volume, 0.7);
   t.is(audio.currentTime, 20);
 });
-
-test.after(t => ck.reset());

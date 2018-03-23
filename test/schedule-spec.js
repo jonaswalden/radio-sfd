@@ -1,15 +1,15 @@
 "use strict";
 
-const {schedule} = require("../scripts/main");
 const {test} = require("ava");
 const addTimeout = require("./helpers/addTimeout");
 const ck = require("chronokinesis");
 
-let today, timeouts, minute = 60 * 1000;
+let schedule, today, timeouts, minute = 60 * 1000;
 test.beforeEach(() => {
   const window = global.window = {};
   addTimeout(window, timeouts = []);
   today = "2012-04-02";
+  schedule = require("../scripts/main").schedule;
 });
 
 test.afterEach(() => {
