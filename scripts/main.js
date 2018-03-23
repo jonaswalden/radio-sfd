@@ -1,11 +1,23 @@
-(() => {
-  "use strict";
+"use strict";
 
-  const playlist = Playlist(window.tracks);
+init(window.tracks, window.keyTracks);
+
+if (typeof module !== "undefined") {
+  module.exports = {
+    Playlist,
+    AudioPlayer,
+    schedule
+  };
+}
+
+function init (tracks, keyTracks) {
+  if (!tracks || !keyTracks) return;
+
+  const playlist = Playlist(tracks);
   const audioPlayer = AudioPlayer(playlist);
-  schedule(window.keyTracks, audioPlayer);
-  audioPlayer.playNext();
-})();
+  schedule(window.keyTracks, audioPlayer.alert);
+  audioPlayer.playNext(keyTracks);
+}
 
 function Playlist (tracks) {
   const amountTracks = tracks.length;
@@ -43,23 +55,23 @@ function AudioPlayer (playlist) {
     audio.volume = 1;
     audio.play();
     audio.addEventListener("ended", resume);
-    console.log("alert", src);
 
     function resume () {
       audio.src = currentSrc;
       audio.currentTime = currentTime;
       audio.volume = volume;
       audio.play();
-      console.log("resume", currentSrc);
       audio.removeEventListener("ended", resume);
       audio.addEventListener("ended", playNext);
     }
   }
 }
 
-function schedule (keyTracks, audioPlayer) {
-  const now = new Date();
-  const today = [now.getFullYear(), now.getMonth(), now.getDate()];
+function schedule (keyTracks, alert) {
+  const date = new Date();
+  const thisMonth = [date.getFullYear(), date.getMonth()];
+  const today = [...thisMonth, date.getDate()];
+  const tomorrow = [...thisMonth, today[2] + 1];
 
   queueNext();
 
@@ -71,18 +83,29 @@ function schedule (keyTracks, audioPlayer) {
     window.setTimeout(play, timeout);
 
     function play () {
-      audioPlayer.alert(track);
+      alert(track);
       queueNext();
     }
   }
 
   function getUpcomingTrack() {
-    for (let [track, queue] of keyTracks) {
-      const [nextHour, nextMinutes] = queue.split(":");
-      const timeTo = new Date(...today, nextHour, nextMinutes).getTime() - now.getTime();
-      if (timeTo < 0) continue;
+    const now = Date.now();
+    let lastTime = 0;
 
-      return [track, timeTo];
+    for (let [track, timeString] of keyTracks) {
+      const queue = nextTime(timeString.split(":")) - now;
+      if (queue < 0) continue;
+
+      return [track, queue];
+    }
+
+    function nextTime(moment) {
+      let time = new Date(...today, ...moment).getTime();
+      if (time < lastTime) {
+        time = new Date(...tomorrow, ...moment).getTime();
+      }
+      lastTime = time;
+      return time;
     }
   }
 }

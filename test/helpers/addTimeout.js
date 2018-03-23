@@ -1,10 +1,9 @@
 "use strict";
 
-module.exports = function addTimout (window) {
-  window._timeouts = [];
+module.exports = function addTimout (window, timeouts) {
   window.setTimeout = setMockTimeout;
 
   function setMockTimeout (...args) {
-    window._timeouts.push(args);
+    timeouts.push(args);
   }
 };

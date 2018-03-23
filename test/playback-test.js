@@ -6,13 +6,13 @@ const addTimeout = require("./helpers/addTimeout");
 const ck = require("chronokinesis");
 const navigateTo = require("./helpers/navigateTo");
 
-let browser, audio;
+let browser, audio, timeouts;
 test.serial("loads document", async t => {
   browser = await navigateTo("./index.html");
   audio = browser.document.getElementById("audio-player");
   t.truthy(audio);
 
-  addTimeout(browser.window);
+  addTimeout(browser.window, timeouts = []);
   addMediaInterface(audio);
 });
 
@@ -58,9 +58,9 @@ test.serial("tracks are played in a loop", t => {
 });
 
 test.serial("the key track 2 is queued in 60 minutes" , t => {
-  t.is(browser.window._timeouts.length, 1);
+  t.is(timeouts.length, 1);
 
-  const [, timeout] = browser.window._timeouts[0];
+  const [, timeout] = timeouts[0];
   t.is(timeout, 60 * 60 * 1000);
 });
 
@@ -73,7 +73,7 @@ test.serial("track 1 is playing at 20s on 70% volume", t => {
 });
 
 test.serial("key track 2 is a go and plays at 100% volume", t => {
-  const [playNextTrack] = browser.window._timeouts[0];
+  const [playNextTrack] = timeouts[0];
   playNextTrack();
 
   t.is(audio.src, "Y");
