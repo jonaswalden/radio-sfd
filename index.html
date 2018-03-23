@@ -4,11 +4,93 @@
     <title>Radio SFD</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+      body {
+        overflow: hidden;
+      }
+
+      figure {
+        margin: 0;
+      }
+
+      .turntable {
+        position: absolute;
+      }
+
+      .turntable--standby .record,
+      .turntable--standby .record__label {
+        animation-play-state: paused;
+      }
+
+      /* edge = 1.7% */
+      /* center = 43.6% */
+      /* label = 34.4% */
+      /* pin = 2% */
+
+      .record {
+        position: absolute;
+        width: 100%;
+        top: 0;
+        left: 0;
+        animation: wobble 1.82s infinite linear;
+      }
+
+      .record__vinyl {
+        width: 100%;
+        display: block;
+      }
+
+      .record__label {
+        position: absolute;
+        width: 34.4%;
+        top: 32.8%;
+        left: 32.8%;
+        animation: spin 1.82s infinite linear;
+      }
+
+      @media (orientation: portrait) {
+        .turntable {
+          width: 175vh;
+          height: 175vh;
+          left: calc(50% - 87.5vh);
+          top: 8vh;
+        }
+      }
+
+      @media (orientation: landscape) {
+        .turntable {
+          width: 90vw;
+          height: 90vw;
+          left: 5vw;
+          top: calc(100% - 48vw);
+        }
+      }
+
+      @keyframes wobble {
+        0% { transform: rotateX(7deg) rotateY(0deg); }
+        25% { transform: rotateX(0deg) rotateY(7deg); }
+        50% { transform: rotateX(-7deg) rotateY(0deg); }
+        75% { transform: rotateX(0deg) rotateY(-7deg); }
+        100% { transform: rotateX(7deg) rotateY(0deg); }
+      }
+
+      @keyframes spin {
+        from { transform: rotateZ(0deg); }
+        to { transform: rotateZ(360deg); }
+      }
+    </style>
   </head>
   <body>
     <h1>Radio SFD</h1>
 
     <audio id="audio-player" controls style="width: 100%"></audio>
+
+    <figure class="turntable">
+      <div class="record">
+        <img class="record__vinyl" src="images/record.svg">
+        <img class="record__label" src="images/label.svg">
+      </div>
+    </figure>
 
     <script>
       window.tracks = [
