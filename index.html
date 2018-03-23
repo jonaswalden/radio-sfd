@@ -2,12 +2,25 @@
 <html>
   <head>
     <title>Radio SFD</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
   </head>
   <body>
     <h1>Radio SFD</h1>
 
-    <audio id="audio-player"></audio>
+    <audio id="audio-player" controls style="width: 100%"></audio>
 
+    <script>
+      window.tracks = [
+        "audio/01-dj_shadow-this_time_(im_gonna_try_it_my_way).mp3",
+        "audio/02-dj_shadow-this_time_(im_gonna_dub_it_my_way).mp3",
+      ];
+      window.keyTracks = [
+        ["audio/horse.ogg", "22:10"],
+        ["audio/horse.ogg", "22:11:15"],
+        ["audio/horse.ogg", "22:11:30"],
+      ];
+    </script>
     <script async src="scripts/main.js"></script>
   </body>
 </html>
