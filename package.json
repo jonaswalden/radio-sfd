@@ -8,11 +8,12 @@
     "test": "test"
   },
   "scripts": {
-    "test": "npm t"
+    "test": "ava"
   },
   "author": "",
   "license": "ISC",
-  "dependencies": {
-    "@expressen/tallahassee": "^2.6.0"
+  "devDependencies": {
+    "@expressen/tallahassee": "^2.6.0",
+    "ava": "^0.25.0"
   }
 }
