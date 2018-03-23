@@ -11,14 +11,17 @@ test.after(() => {
   ck.reset();
 });
 
-let browser, audio, timeouts;
+let browser, music, alert, timeouts;
 test.serial("loads document", async t => {
   browser = await navigateTo("./index.html");
-  audio = browser.document.getElementById("audio-player");
-  t.truthy(audio);
+  music = browser.document.getElementById("music-player");
+  t.truthy(music, "no music audio");
+  addMediaInterface(music);
+  alert = browser.document.getElementById("alert-player");
+  t.truthy(alert, "no alert audio");
+  addMediaInterface(alert);
 
   addTimeout(browser.window, timeouts = []);
-  addMediaInterface(audio);
 });
 
 test.serial("tracks are available", t => {
@@ -43,55 +46,55 @@ test.serial("scripts are loaded at 09:00", t => {
   require("../scripts/main");
 });
 
+test.serial("playback has started", t => {
+  t.is(music.src, "a", "unexpected music src");
+  t.is(music._playing, true, "music not playing");
+});
+
 test.serial("tracks are played in a loop", t => {
-  t.is(audio.src, "a");
-  t.is(audio._playing, true);
+  music.dispatchEvent("ended");
 
-  audio.dispatchEvent("ended");
+  t.is(music.src, "b", "unexpected music src");
+  t.is(music._playing, true, "music not playing");
 
-  t.is(audio.src, "b");
-  t.is(audio._playing, true);
+  music.dispatchEvent("ended");
 
-  audio.dispatchEvent("ended");
+  t.is(music.src, "c", "unexpected music src");
+  t.is(music._playing, true, "music not playing");
 
-  t.is(audio.src, "c");
-  t.is(audio._playing, true);
+  music.dispatchEvent("ended");
 
-  audio.dispatchEvent("ended");
-
-  t.is(audio.src, "a");
-  t.is(audio._playing, true);
+  t.is(music.src, "a", "unexpected music src");
+  t.is(music._playing, true, "music not playing");
 });
 
 test.serial("the key track 2 is queued in 60 minutes" , t => {
-  t.is(timeouts.length, 1);
+  t.is(timeouts.length, 1, "unexpected amount of timeouts");
 
   const [, timeout] = timeouts[0];
-  t.is(timeout, 60 * 60 * 1000);
+  t.is(timeout, 60 * 60 * 1000, "unexpected timeout");
 });
 
-test.serial("track 1 is playing at 20s on 70% volume", t => {
-  t.is(audio.src, "a");
-  t.is(audio._playing, true);
-  audio.volume = 0.7;
-  audio.currentSrc = audio.src;
-  audio.currentTime = 20;
+test.serial("track 1 is still playing", t => {
+  t.is(music.src, "a", "unexpected music src");
+  t.is(music._playing, true, "music not playing");
 });
 
-test.serial("key track 2 is a go and plays at 100% volume", t => {
+test.serial("key track 2 is a go", t => {
   const [playNextTrack] = timeouts[0];
   playNextTrack();
 
-  t.is(audio.src, "Y");
-  t.is(audio._playing, true);
-  t.is(audio.volume, 1);
+  t.is(music._playing, false, "music still playing");
+
+  t.is(alert.src, "Y", "unexpected alert.src");
+  t.is(alert._playing, true, "alert not playing");
 });
 
-test.serial("afterwards playback continues with track 1 at 20 s on 70% volume", t => {
-  audio.dispatchEvent("ended");
+test.serial("afterwards playback continues with track 1", t => {
+  alert.dispatchEvent("ended");
 
-  t.is(audio.src, "a");
-  t.is(audio._playing, true);
-  t.is(audio.volume, 0.7);
-  t.is(audio.currentTime, 20);
+  t.is(music.src, "a");
+  t.is(music._playing, true, "music not playing");
+
+  t.is(alert._playing, false, "alert still playing");
 });

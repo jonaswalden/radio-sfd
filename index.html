@@ -5,47 +5,79 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
-      body {
-        overflow: hidden;
+      html {
+        height: 100%;
       }
 
-      figure {
+      body {
+        min-height: 100%;
         margin: 0;
+        overflow: hidden;
+        font-family: sans-serif;
+        background-image:
+          linear-gradient(
+            rgba(0, 0, 0, 0),
+            rgba(0, 0, 0, 0.06)
+          ),
+          linear-gradient(
+            rgb(31, 67, 136) 0%,
+            rgb(31, 67, 136) 33%,
+            rgb(214, 214, 213) 66%,
+            rgb(214, 214, 213) 100%
+          );
+        background-size: 100% 20%, 100% 300%;
+        background-position: bottom, bottom;
+        background-repeat: no-repeat;
+        transition: background-position 0.5s ease;
       }
+
+
+      main {
+        position: relative;
+        z-index: 1;
+        padding: 20px;
+        display: flex;
+        justify-content: center;
+      }
+
+
+      .alert-player__text {
+        opacity: 0;
+        transition: opacity 0.5s ease;
+        font-size: 40px;
+        max-width: 20em;
+        margin: 0 auto;
+        font-style: italic;
+        font-weight: 100;
+        color: white;
+        display: flex;
+        position: relative;
+        text-shadow: 1px 2px 1px rgba(0,0,0,0.05);
+      }
+
+      .alert-player__text::before {
+        content: "”";
+        line-height: 1;
+        font-weight: 900;
+        font-size: 2em;
+        font-style: normal;
+        color: #E81F2E;
+        position: absolute;
+        right: 100%;
+        top: -0.1em;
+        margin-right: 10px;
+      }
+
+      .alert-player__text > time {
+        color: #E81F2E;
+        margin-right: 10px;
+        font-weight: 700;
+      }
+
 
       .turntable {
         position: absolute;
-      }
-
-      .turntable--standby .record,
-      .turntable--standby .record__label {
-        animation-play-state: paused;
-      }
-
-      /* edge = 1.7% */
-      /* center = 43.6% */
-      /* label = 34.4% */
-      /* pin = 2% */
-
-      .record {
-        position: absolute;
-        width: 100%;
-        top: 0;
-        left: 0;
-        animation: wobble 1.82s infinite linear;
-      }
-
-      .record__vinyl {
-        width: 100%;
-        display: block;
-      }
-
-      .record__label {
-        position: absolute;
-        width: 34.4%;
-        top: 32.8%;
-        left: 32.8%;
-        animation: spin 1.82s infinite linear;
+        margin: 0;
       }
 
       @media (orientation: portrait) {
@@ -66,26 +98,71 @@
         }
       }
 
+
+      .record {
+        position: absolute;
+        width: 100%;
+        top: 0;
+        left: 0;
+        animation: wobble 1.82s infinite linear;
+        animation-play-state: paused;
+      }
+
+      .record__vinyl {
+        width: 100%;
+        display: block;
+      }
+
+      .record__label {
+        position: absolute;
+        width: 34.4%;
+        top: 32.8%;
+        left: 32.8%;
+        animation: spin 1.82s infinite linear;
+        animation-play-state: paused;
+      }
+
       @keyframes wobble {
-        0% { transform: rotateX(7deg) rotateY(0deg); }
-        25% { transform: rotateX(0deg) rotateY(7deg); }
-        50% { transform: rotateX(-7deg) rotateY(0deg); }
-        75% { transform: rotateX(0deg) rotateY(-7deg); }
-        100% { transform: rotateX(7deg) rotateY(0deg); }
+        0% { transform: rotateX(5deg) rotateY(0deg); }
+        25% { transform: rotateX(0deg) rotateY(5deg); }
+        50% { transform: rotateX(-5deg) rotateY(0deg); }
+        75% { transform: rotateX(0deg) rotateY(-5deg); }
+        100% { transform: rotateX(5deg) rotateY(0deg); }
       }
 
       @keyframes spin {
         from { transform: rotateZ(124deg); }
         to { transform: rotateZ(484deg); }
       }
+
+
+      .state-music .record,
+      .state-music .record__label {
+        animation-play-state: running;
+      }
+
+
+      .state-alert body {
+        background-position: bottom, top;
+      }
+
+      .state-alert .alert-player__text {
+        opacity: 1;
+      }
     </style>
   </head>
   <body>
-    <h1>Radio SFD</h1>
+    <audio id="music-player"></audio>
+    <audio id="alert-player__audio"></audio>
+    <main>
+      <div class="controls">
+        <button type="button">Play/pause</button>
+        <button type="button">Replay alert</button>
+      </div>
+      <blockquote class="alert-player__text"></blockquote>
+    </main>
 
-    <audio id="audio-player" controls style="width: 100%"></audio>
-
-    <figure class="turntable turntable--standby">
+    <figure class="turntable">
       <div class="record">
         <img class="record__vinyl" src="images/record.svg">
         <img class="record__label" src="images/label.svg">
@@ -94,14 +171,21 @@
 
     <script>
       window.tracks = [
-        "audio/01-dj_shadow-this_time_(im_gonna_try_it_my_way).mp3",
-        "audio/02-dj_shadow-this_time_(im_gonna_dub_it_my_way).mp3",
+        "audio/tom-waits_-_franks-theme.mp3",
+        "audio/brian-eno_-_blank-frank.mp3",
       ];
-      window.keyTracks = [
-        ["audio/horse.ogg", "22:10"],
-        ["audio/horse.ogg", "22:11:15"],
-        ["audio/horse.ogg", "22:11:30"],
-      ];
+      // window.alertMessages = [];
+      const now = new Date();
+      const [hours, minutes] = [now.getHours(), now.getMinutes()];
+      let i = 0;
+      window.alertMessages = Array(10).fill().map((_, index) => {
+        return {
+          queue: (index % 2) ? `${hours}:${minutes + (++i)}` : `${hours}:${minutes + i}:30`,
+          audio: "audio/tunariffic.mp3",
+          text: `${index} Good for the Tuna!`
+        };
+      });
+      console.log(window.alertMessages);
     </script>
     <script async src="scripts/main.js"></script>
   </body>

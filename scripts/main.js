@@ -1,22 +1,22 @@
 "use strict";
 
-init(window.tracks, window.keyTracks);
+init(window.tracks, window.alertMessages);
 
 if (typeof module !== "undefined") {
   module.exports = {
     Playlist,
-    AudioPlayer,
+    MusicPlayer,
     schedule
   };
 }
 
-function init (tracks, keyTracks) {
-  if (!tracks || !keyTracks) return;
+function init (tracks, alertMessages) {
+  if (!tracks || !alertMessages) return;
 
   const playlist = Playlist(tracks);
-  const audioPlayer = AudioPlayer(playlist);
-  schedule(window.keyTracks, audioPlayer.alert);
-  audioPlayer.playNext(keyTracks);
+  const musicPlayer = MusicPlayer(playlist);
+  schedule(alertMessages, musicPlayer);
+  musicPlayer.start();
 }
 
 function Playlist (tracks) {
@@ -33,13 +33,31 @@ function Playlist (tracks) {
   }
 }
 
-function AudioPlayer (playlist) {
-  const audio = document.getElementById("audio-player");
-  audio.addEventListener("ended", playNext);
+function MusicPlayer (playlist) {
+  const audio = document.getElementById("music-player");
+  let playing = false;
+  let disabled = false;
+  let wasPlayingWhenPaused = false;
+
+  window.addEventListener("keyup", keyboardPlayPause);
+  audio.addEventListener("play", toggleVisualizer);
+  audio.addEventListener("pause", toggleVisualizer);
 
   return {
-    alert,
-    playNext
+    start () {
+      playNext();
+      audio.addEventListener("ended", playNext);
+    },
+    pause () {
+      disabled = true;
+      wasPlayingWhenPaused = playing;
+      audio.pause();
+    },
+    resume () {
+      disabled = false;
+      if (!wasPlayingWhenPaused) return;
+      audio.play();
+    }
   };
 
   function playNext () {
@@ -47,27 +65,30 @@ function AudioPlayer (playlist) {
     audio.play();
   }
 
-  function alert (src) {
-    const {currentSrc, currentTime, volume} = audio;
-    audio.removeEventListener("ended", playNext);
+  function keyboardPlayPause (event) {
+    if (!["Enter", " "].includes(event.key)) return;
+    if (disabled) return;
 
-    audio.src = src;
-    audio.volume = 1;
-    audio.play();
-    audio.addEventListener("ended", resume);
+    if (playing) audio.pause();
+    else audio.play();
+  }
 
-    function resume () {
-      audio.src = currentSrc;
-      audio.currentTime = currentTime;
-      audio.volume = volume;
-      audio.play();
-      audio.removeEventListener("ended", resume);
-      audio.addEventListener("ended", playNext);
-    }
+  function toggleVisualizer (event) {
+    playing = event.type === "play";
+    document.documentElement.classList.toggle("state-music", playing);
+
+    // if (!playing && (this.duration - this.currentTime) < 1) {
+    //   console.log("ended?");
+    //   this.dispatchEvent(new Event("ended"));
+    // }
   }
 }
 
-function schedule (keyTracks, alert) {
+function schedule (alertMessages, musicPlayer) {
+  const audio = document.getElementById("alert-player__audio");
+  const [text] = document.getElementsByClassName("alert-player__text");
+  if (!audio || !text) return;
+
   const date = new Date();
   const thisMonth = [date.getFullYear(), date.getMonth()];
   const today = [...thisMonth, date.getDate()];
@@ -76,30 +97,57 @@ function schedule (keyTracks, alert) {
   queueNext();
 
   function queueNext () {
-    const keyTrack = getUpcomingTrack();
-    if (!keyTrack) return;
+    const upcoming = getUpcoming();
+    if (!upcoming) return;
 
-    const [track, timeout] = keyTrack;
-    window.setTimeout(play, timeout);
+    window.setTimeout(() => play(upcoming.message), upcoming.timeout);
+  }
 
-    function play () {
-      alert(track);
-      queueNext();
+  async function play (message) {
+    text.textContent = "...";
+    toggleAlertState(true);
+    musicPlayer.pause();
+
+    await playVignette();
+    await playMessage();
+    await new Promise(resolve => setTimeout(resolve, 500));
+
+    toggleAlertState(false);
+    musicPlayer.resume();
+    queueNext();
+
+    function playVignette () {
+      audio.src = "audio/horse.ogg";
+      audio.play();
+
+      return new Promise(resolve => {
+        audio.addEventListener("ended", resolve, {once: true});
+      });
+    }
+
+    function playMessage () {
+      audio.src = message.audio;
+      audio.play();
+      text.innerHTML = `<time>${message.queue}</time> ${message.text}`;
+
+      return new Promise(resolve => {
+        audio.addEventListener("ended", resolve, {once: true});
+      });
     }
   }
 
-  function getUpcomingTrack() {
+  function getUpcoming () {
     const now = Date.now();
     let lastTime = 0;
 
-    for (let [track, timeString] of keyTracks) {
-      const queue = nextTime(timeString.split(":")) - now;
-      if (queue < 0) continue;
-
-      return [track, queue];
+    for (let message of alertMessages) {
+      const timeout = nextTime(message.queue.split(":")) - now;
+      if (timeout < 0) continue;
+      console.log("next up", timeout);
+      return {message, timeout};
     }
 
-    function nextTime(moment) {
+    function nextTime (moment) {
       let time = new Date(...today, ...moment).getTime();
       if (time < lastTime) {
         time = new Date(...tomorrow, ...moment).getTime();
@@ -107,5 +155,9 @@ function schedule (keyTracks, alert) {
       lastTime = time;
       return time;
     }
+  }
+
+  function toggleAlertState (on) {
+    document.documentElement.classList.toggle("state-alert", on);
   }
 }
