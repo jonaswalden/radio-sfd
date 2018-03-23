@@ -1,31 +1,39 @@
-"use strict";
+(() => {
+  "use strict";
 
-var audio = document.getElementById("audio-player");
-window._pending = window.fetch("http://radio-api.sfd/tracks.json")
-  .then(res => res.json())
-  .then(Playlist)
-  .then(audioPlayer);
+  const audioPlayer = AudioPlayer(Playlist(window.tracks));
+  audioPlayer.playNext();
 
-function Playlist (tracks) {
-  var amountTracks = tracks.length;
-  var t = amountTracks;
+  function Playlist (tracks) {
+    const amountTracks = tracks.length;
+    let t = amountTracks;
 
-  return { next };
+    return {
+      next
+    };
 
-  function next () {
-    const track = tracks[t++ % amountTracks];
-    console.log(track);
-    return track.src;
+    function  next () {
+      const track = tracks[t++ % amountTracks];
+      return track;
+    }
   }
-}
 
-function audioPlayer (playlist) {
-  playNext();
+  function AudioPlayer (playlist) {
+    const audio = document.getElementById("audio-player");
+    audio.addEventListener("ended", playNext);
 
-  audio.addEventListener("ended", playNext);
+    return {
+      alert,
+      playNext
+    };
 
-  function playNext() {
-    audio.src = playlist.next();
-    audio.play();
+    function playNext () {
+      audio.src = playlist.next();
+      audio.play();
+    }
+
+    function alert (src) {
+      const {currentSrc, currentTime, volume} = audio;
+    }
   }
-}
+})();
