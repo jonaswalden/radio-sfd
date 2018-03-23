@@ -1,0 +1,18 @@
+{
+  "name": "sfd-radio",
+  "version": "1.0.0",
+  "description": "music player for Saint Frank's Day holiday festivities",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib",
+    "test": "test"
+  },
+  "scripts": {
+    "test": "npm t"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@expressen/tallahassee": "^2.6.0"
+  }
+}
