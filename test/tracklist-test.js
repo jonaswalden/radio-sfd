@@ -5,9 +5,9 @@ const Tracklist = require("../lib/tracklist");
 
 test("tracklist filled with looped tracks to supplied duration", t => {
   const tracks = [
-    {title: "a", duration: 10},
-    {title: "b", duration: 20},
-    {title: "c", duration: 30},
+    {filepath: "a", duration: 10},
+    {filepath: "b", duration: 20},
+    {filepath: "c", duration: 30},
   ];
 
   const tracklist = Tracklist(tracks, 121);
@@ -25,15 +25,15 @@ test("tracklist filled with looped tracks to supplied duration", t => {
 
 test("inserts key tracks in desired places", t => {
   const tracks = [
-    {title: "a", duration: 3 * 60},
-    {title: "b", duration: 3 * 60},
-    {title: "c", duration: 3 * 60},
+    {filepath: "a", duration: 3 * 60},
+    {filepath: "b", duration: 3 * 60},
+    {filepath: "c", duration: 3 * 60},
   ];
 
   const keyTracks = [
-    {title: "X", duration: 1 * 60, queue: 10 * 60},
-    {title: "X", duration: 1 * 60, queue: 20 * 60},
-    {title: "Y", duration: 1 * 60, queue: 30 * 60},
+    {filepath: "X", duration: 1 * 60, queue: 10 * 60},
+    {filepath: "X", duration: 1 * 60, queue: 20 * 60},
+    {filepath: "Y", duration: 1 * 60, queue: 30 * 60},
   ];
 
   const tracklist = Tracklist(tracks, 30 * 60, keyTracks);
