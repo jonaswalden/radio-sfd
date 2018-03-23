@@ -17,13 +17,13 @@ test.before("tracks are available", t => {
     .reply(200, tracks);
 });
 
-let browser, audioPlayer;
+let browser, audio;
 test.serial("loads document", async t => {
   browser = await navigateTo("./index.html");
-  audioPlayer = browser.document.getElementById("audio-player");
-  t.truthy(audioPlayer);
+  audio = browser.document.getElementById("audio-player");
+  t.truthy(audio);
 
-  addMediaApi(audioPlayer);
+  addMediaApi(audio);
 });
 
 test.serial("scripts are loaded", t => {
@@ -33,25 +33,30 @@ test.serial("scripts are loaded", t => {
 });
 
 test.serial("tracks are loaded", async t => {
-  await Promise.all(browser.window.fetch._pendingRequests);
+  t.true(!!browser.window._pending);
+  await browser.window._pending;
   t.is(trackRequests.pendingMocks().length, 0);
 });
 
-test.serial("first track is playing", async t => {
-  await new Promise(resolve => setTimeout(resolve, 10));
-  console.log("reading", audioPlayer.src);
-  t.is(audioPlayer._playing, true);
-  t.is(audioPlayer.src, "a");
-});
+test.serial("tracks are played in a loop", t => {
+  console.log("reading", audio.src);
+  t.is(audio.src, "a");
+  t.is(audio._playing, true);
 
-test.serial("first track ends", t => {
-  t.plan(0);
-  audioPlayer.dispatchEvent("ended");
-});
+  audio.dispatchEvent("ended");
 
-test.serial("second track is playing", t => {
-  t.is(audioPlayer.src, "b");
-  t.is(audioPlayer._playing, true);
+  t.is(audio.src, "b");
+  t.is(audio._playing, true);
+
+  audio.dispatchEvent("ended");
+
+  t.is(audio.src, "c");
+  t.is(audio._playing, true);
+
+  audio.dispatchEvent("ended");
+
+  t.is(audio.src, "a");
+  t.is(audio._playing, true);
 });
 
 function addMediaApi (element) {

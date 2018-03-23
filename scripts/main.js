@@ -1,13 +1,31 @@
 "use strict";
 
-const audio = document.getElementById("audio-player");
-window.fetch("http://radio-api.sfd/tracks.json")
+var audio = document.getElementById("audio-player");
+window._pending = window.fetch("http://radio-api.sfd/tracks.json")
   .then(res => res.json())
+  .then(Playlist)
   .then(audioPlayer);
 
-function audioPlayer (tracks) {
-  if (!tracks) return;
-  console.log("writing", tracks[0].src);
-  audio.src = tracks[0].src;
-  audio.play();
+function Playlist (tracks) {
+  var amountTracks = tracks.length;
+  var t = amountTracks;
+
+  return { next };
+
+  function next () {
+    const track = tracks[t++ % amountTracks];
+    console.log(track);
+    return track.src;
+  }
+}
+
+function audioPlayer (playlist) {
+  playNext();
+
+  audio.addEventListener("ended", playNext);
+
+  function playNext() {
+    audio.src = playlist.next();
+    audio.play();
+  }
 }
