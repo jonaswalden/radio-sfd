@@ -57,11 +57,37 @@ test.serial("tracks are played in a loop", t => {
   t.is(audio._playing, true);
 });
 
-test.serial("the second key track is queued" , t => {
+test.serial("the key track 2 is queued in 60 minutes" , t => {
   t.is(browser.window._timeouts.length, 1);
 
-  const [playKeyTrack, timeout] = browser.window._timeouts.pop();
+  const [, timeout] = browser.window._timeouts[0];
   t.is(timeout, 60 * 60 * 1000);
+});
+
+test.serial("track 1 is playing at 20s on 70% volume", t => {
+  t.is(audio.src, "a");
+  t.is(audio._playing, true);
+  audio.volume = 0.7;
+  audio.currentSrc = audio.src;
+  audio.currentTime = 20;
+});
+
+test.serial("key track 2 is a go and plays at 100% volume", t => {
+  const [playNextTrack] = browser.window._timeouts[0];
+  playNextTrack();
+
+  t.is(audio.src, "Y");
+  t.is(audio._playing, true);
+  t.is(audio.volume, 1);
+});
+
+test.serial("afterwards playback continues with track 1 at 20 s on 70% volume", t => {
+  audio.dispatchEvent("ended");
+
+  t.is(audio.src, "a");
+  t.is(audio._playing, true);
+  t.is(audio.volume, 0.7);
+  t.is(audio.currentTime, 20);
 });
 
 test.after(t => ck.reset());

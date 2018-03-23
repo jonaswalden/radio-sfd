@@ -37,7 +37,23 @@ function AudioPlayer (playlist) {
 
   function alert (src) {
     const {currentSrc, currentTime, volume} = audio;
-    console.log("alert!", src);
+    audio.removeEventListener("ended", playNext);
+
+    audio.src = src;
+    audio.volume = 1;
+    audio.play();
+    audio.addEventListener("ended", resume);
+    console.log("alert", src);
+
+    function resume () {
+      audio.src = currentSrc;
+      audio.currentTime = currentTime;
+      audio.volume = volume;
+      audio.play();
+      console.log("resume", currentSrc);
+      audio.removeEventListener("ended", resume);
+      audio.addEventListener("ended", playNext);
+    }
   }
 }
 
