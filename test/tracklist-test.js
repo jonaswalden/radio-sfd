@@ -1,7 +1,7 @@
 "use strict";
 
 const {test} = require("ava");
-const Tracklist = require("../lib/tracklist");
+const Tracklist = require("../scripts/tracklist");
 
 test("tracklist filled with looped tracks to supplied duration", t => {
   const tracks = [

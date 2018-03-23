@@ -1,7 +1,7 @@
 "use strict";
 
 const {test} = require("ava");
-const Playlist = require("../lib/playlist");
+const Playlist = require("../scripts/playlist");
 
 test("formats tracklist to a playlist", t => {
   const tracks = [
