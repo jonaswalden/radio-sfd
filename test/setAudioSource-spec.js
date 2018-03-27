@@ -1,13 +1,14 @@
 "use strict";
 
-const {setAudioSource} = require("../scripts/main");
 const {test} = require("ava");
 const addMediaInterface = require("./helpers/addMediaInterface");
 const MockEvent = require("./helpers/MockEvent");
 const Tallahassee = require("@expressen/tallahassee");
+const {Compiler} = require("@expressen/tallahassee/lib/Compiler");
 
-let audio, Event;
+let audio, Event, setAudioSource;
 test.beforeEach(t => {
+  Compiler([/scripts/]);
   const browser = Tallahassee({}).load({
     text: `
       <html>
@@ -22,6 +23,7 @@ test.beforeEach(t => {
 
   addMediaInterface(audio);
   t.is(audio.src, "");
+  setAudioSource = require("../scripts/main").setAudioSource;
 });
 
 test("sets supplied audio source on supplied audio", t => {

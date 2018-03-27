@@ -1,10 +1,6 @@
 "use strict";
 
-try {
-  init(window.tracks, window.alertMessages);
-}
-catch (err) {
-}
+init(window.tracks, window.alertMessages);
 
 if (typeof module !== "undefined") {
   module.exports = {
