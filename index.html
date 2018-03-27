@@ -38,8 +38,25 @@
         padding: 20px;
         display: flex;
         justify-content: center;
+        flex-direction: column;
       }
 
+      .controls {
+        display: flex;
+        justify-content: space-between;
+      }
+
+      .controls > button {
+        display: flex;
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        justify-content: center;
+        align-items: center;
+        border: none;
+        background: #1F4388;
+        color: #fff;
+      }
 
       .alert-player__text {
         opacity: 0;
@@ -152,12 +169,12 @@
     </style>
   </head>
   <body>
-    <audio id="music-player"></audio>
+    <audio id="music-player" controls style="width: 100%"></audio>
     <audio id="alert-player__audio"></audio>
     <main>
       <div class="controls">
-        <button type="button">Play/pause</button>
-        <button type="button">Replay alert</button>
+        <button class="music-player__play-button" type="button">Play/pause</button>
+        <button class="alert-player__repeat-button" type="button">Replay alert</button>
       </div>
       <blockquote class="alert-player__text"></blockquote>
     </main>
@@ -171,8 +188,9 @@
 
     <script>
       window.tracks = [
-        "audio/tom-waits_-_franks-theme.mp3",
-        "audio/brian-eno_-_blank-frank.mp3",
+        // "audio/tom-waits_-_franks-theme.mp3",
+        // "audio/brian-eno_-_blank-frank.mp3",
+        "audio/02-action_bronson-steve_wynn-noir.mp3#t=10,12"
       ];
       // window.alertMessages = [];
       const now = new Date();

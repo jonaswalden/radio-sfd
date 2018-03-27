@@ -1,12 +1,17 @@
 "use strict";
 
-init(window.tracks, window.alertMessages);
+try {
+  init(window.tracks, window.alertMessages);
+}
+catch (err) {
+}
 
 if (typeof module !== "undefined") {
   module.exports = {
     Playlist,
     MusicPlayer,
-    schedule
+    schedule,
+    setAudioSource
   };
 }
 
@@ -35,13 +40,15 @@ function Playlist (tracks) {
 
 function MusicPlayer (playlist) {
   const audio = document.getElementById("music-player");
+  const playButton = document.getElementsByClassName("music-player__play-button")[0];
   let playing = false;
   let disabled = false;
   let wasPlayingWhenPaused = false;
 
   window.addEventListener("keyup", keyboardPlayPause);
-  audio.addEventListener("play", toggleVisualizer);
-  audio.addEventListener("pause", toggleVisualizer);
+  playButton.addEventListener("click", playPause);
+  audio.addEventListener("play", toggleMusicState);
+  audio.addEventListener("pause", toggleMusicState);
 
   return {
     start () {
@@ -61,19 +68,23 @@ function MusicPlayer (playlist) {
   };
 
   function playNext () {
-    audio.src = playlist.next();
+    setAudioSource(audio, playlist.next());
     audio.play();
   }
 
   function keyboardPlayPause (event) {
     if (!["Enter", " "].includes(event.key)) return;
+    playPause();
+  }
+
+  function playPause () {
     if (disabled) return;
 
     if (playing) audio.pause();
     else audio.play();
   }
 
-  function toggleVisualizer (event) {
+  function toggleMusicState (event) {
     playing = event.type === "play";
     document.documentElement.classList.toggle("state-music", playing);
 
@@ -117,7 +128,7 @@ function schedule (alertMessages, musicPlayer) {
     queueNext();
 
     function playVignette () {
-      audio.src = "audio/horse.ogg";
+      setAudioSource(audio, "audio/horse.ogg");
       audio.play();
 
       return new Promise(resolve => {
@@ -126,7 +137,7 @@ function schedule (alertMessages, musicPlayer) {
     }
 
     function playMessage () {
-      audio.src = message.audio;
+      setAudioSource(audio, message.audio);
       audio.play();
       text.innerHTML = `<time>${message.queue}</time> ${message.text}`;
 
@@ -159,5 +170,29 @@ function schedule (alertMessages, musicPlayer) {
 
   function toggleAlertState (on) {
     document.documentElement.classList.toggle("state-alert", on);
+  }
+}
+
+function setAudioSource (audio, src) {
+  const [, search] = src.split("#");
+  audio.src = src;
+
+  if (!search) return;
+
+  const [, playbackStop] = search.split(",");
+  if (!playbackStop) return;
+
+  endPlaybackAfter(playbackStop);
+
+  function endPlaybackAfter (durationString) {
+    const duration = Number(durationString);
+    audio.addEventListener("pause", checkProgress);
+
+    function checkProgress () {
+      if (audio.currentTime < duration) return;
+
+      audio.removeEventListener("pause", checkProgress);
+      audio.dispatchEvent(new window.Event("ended"));
+    }
   }
 }
