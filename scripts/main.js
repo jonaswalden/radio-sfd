@@ -119,12 +119,9 @@ function schedule (alertMessages, musicPlayer) {
       timeout = new Date(...tomorrow, ...moment).getTime() - now;
     }
 
-    console.log("queuing next", upcoming.queue, upcoming.text, timeout);
-
     window.setTimeout(playNext, timeout);
 
     function playNext () {
-      console.log("shifting");
       play(upcoming);
       passedMessages.push(upcomingMessages.shift());
     }
