@@ -3,6 +3,11 @@
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
 <svg version="1.1" id="record" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
 	 width="578px" height="578px" viewBox="0 0 578 578" enable-background="new 0 0 578 578" xml:space="preserve">
+<style>
+	#shine path:nth-child(24) {
+		display: none;
+	}
+</style>
 <path id="wax" fill="#E81F2E" d="M578,289c0,159.627-129.373,289-289,289S0,448.627,0,289S129.373,0,289,0S578,129.373,578,289z"/>
 <defs>
 	<filter id="Adobe_OpacityMaskFilter" filterUnits="userSpaceOnUse" x="9.217" y="9.217" width="559.566" height="559.566">
@@ -12,7 +17,7 @@
 <mask maskUnits="userSpaceOnUse" x="9.217" y="9.217" width="559.566" height="559.566" id="SVGID_1_">
 	<g filter="url(#Adobe_OpacityMaskFilter)">
 		<rect fill="#333333" width="578" height="578"/>
-		<polygon opacity="0.4" fill="#FFFFFF" enable-background="new    " points="114.035,658.363 463.965,-80.363 632.956,68.237 
+		<polygon opacity="0.4" fill="#FFFFFF" enable-background="new    " points="114.035,658.363 463.965,-80.363 632.956,68.237
 			-54.956,509.763 		"/>
 	</g>
 </mask>
