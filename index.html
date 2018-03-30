@@ -41,6 +41,53 @@
         flex-direction: column;
       }
 
+      .radial-shine {
+        position: relative;
+        overflow: hidden;
+      }
+
+      .radial-shine__shadow {
+        opacity: 0.2;
+      }
+
+      .radial-shine__highlight::before,
+      .radial-shine__highlight::after,
+      .radial-shine__shadow::before,
+      .radial-shine__shadow::after {
+        content: "";
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        width: 0;
+        height: 0;
+        border-style: solid;
+      }
+
+      .radial-shine__highlight::before,
+      .radial-shine__highlight::after {
+        border-color: white transparent;
+        transform: translate(-50%, -50%) rotateZ(45deg);
+      }
+
+      .radial-shine__shadow::before,
+      .radial-shine__shadow::after {
+        border-color: black transparent;
+        transform: translate(-50%, -50%) rotateZ(-45deg);
+      }
+
+      .radial-shine__highlight::before,
+      .radial-shine__shadow::before {
+        border-width: 3vw 1vw;
+        opacity: 0.7;
+      }
+
+      .radial-shine__highlight::after,
+      .radial-shine__shadow::after {
+        border-width: 1.5vw 1vw;
+        opacity: 0.4;
+      }
+
+
       .controls {
         display: flex;
         justify-content: space-between;
@@ -57,6 +104,7 @@
         background: #1F4388;
         color: #fff;
       }
+
 
       .alert-player__text {
         opacity: 0;
@@ -95,6 +143,16 @@
       .turntable {
         position: absolute;
         margin: 0;
+      }
+
+      .turntable__pin {
+        position: absolute;
+        width: 2%;
+        height: 2%;
+        left: 49%;
+        top: 49%;
+        border-radius: 50%;
+        background-color: silver;
       }
 
       @media (orientation: portrait) {
@@ -138,6 +196,40 @@
         animation: spin 1.82s infinite linear;
         animation-play-state: paused;
       }
+
+      .record__turntable-pin-shadow {
+        position: absolute;
+        width: 2%;
+        height: 2%;
+        left: 49%;
+        top: 49%;
+        transform: rotateZ(45deg);
+      }
+
+      .record__turntable-pin-shadow::before,
+      .record__turntable-pin-shadow::after {
+        content: "";
+        position: absolute;
+      }
+
+      .record__turntable-pin-shadow::before {
+        width: 130%;
+        height: 130%;
+        left: -15%;
+        top: -15%;
+        border-radius: 50%;
+        background: linear-gradient(to right, black, white);
+        opacity: 0.3;
+      }
+
+      .record__turntable-pin-shadow::after {
+        width: 200%;
+        height: 100%;
+        left: 50%;
+        top: 0;
+        background: linear-gradient(to right, rgba(0,0,0,0.5), rgba(0,0,0,0));
+      }
+
 
       @keyframes wobble {
         0% { transform: rotateX(5deg) rotateY(0deg); }
@@ -183,6 +275,11 @@
       <div class="record">
         <img class="record__vinyl" src="images/record.svg">
         <img class="record__label" src="images/label.svg">
+        <div class="record__turntable-pin-shadow"></div>
+      </div>
+      <div class="turntable__pin radial-shine">
+        <div class="radial-shine__highlight"></div>
+        <div class="radial-shine__shadow"></div>
       </div>
     </figure>
 
