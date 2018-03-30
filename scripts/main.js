@@ -69,7 +69,7 @@ function MusicPlayer (playlist) {
   }
 
   function keyboardPlayPause (event) {
-    if (!["Enter", " "].includes(event.key)) return;
+    if (![" "].includes(event.key)) return;
     playPause();
   }
 
@@ -83,11 +83,6 @@ function MusicPlayer (playlist) {
   function toggleMusicState (event) {
     playing = event.type === "play";
     document.documentElement.classList.toggle("state-music", playing);
-
-    // if (!playing && (this.duration - this.currentTime) < 1) {
-    //   console.log("ended?");
-    //   this.dispatchEvent(new Event("ended"));
-    // }
   }
 }
 
@@ -204,7 +199,6 @@ function schedule (alertMessages, musicPlayer) {
 
      return upcomingMessages[0];
   }
-
 
   function toggleAlertState (on) {
     document.documentElement.classList.toggle("state-alert", on);
