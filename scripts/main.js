@@ -94,20 +94,47 @@ function MusicPlayer (playlist) {
 function schedule (alertMessages, musicPlayer) {
   const audio = document.getElementById("alert-player__audio");
   const [text] = document.getElementsByClassName("alert-player__text");
+  const [repeatButton] = document.getElementsByClassName("alert-player__repeat-button");
   if (!audio || !text) return;
 
   const date = new Date();
   const thisMonth = [date.getFullYear(), date.getMonth()];
   const today = [...thisMonth, date.getDate()];
   const tomorrow = [...thisMonth, today[2] + 1];
+  let [passedMessages, upcomingMessages] = sortMessages();
 
   queueNext();
 
+  if (repeatButton) {
+    repeatButton.addEventListener("click", repeatLast);
+  }
+
   function queueNext () {
     const upcoming = getUpcoming();
-    if (!upcoming) return;
+    const moment = upcoming.queue.split(":");
+    const now = Date.now();
+    let timeout = new Date(...today, ...moment).getTime() - now;
 
-    window.setTimeout(() => play(upcoming.message), upcoming.timeout);
+    if (timeout < 0) {
+      timeout = new Date(...tomorrow, ...moment).getTime() - now;
+    }
+
+    console.log("queuing next", upcoming.queue, upcoming.text, timeout);
+
+    window.setTimeout(playNext, timeout);
+
+    function playNext () {
+      console.log("shifting");
+      play(upcoming);
+      passedMessages.push(upcomingMessages.shift());
+    }
+  }
+
+  function repeatLast () {
+    const last = passedMessages[passedMessages.length - 1];
+    if (!last) return;
+
+    play(last);
   }
 
   async function play (message) {
@@ -143,26 +170,44 @@ function schedule (alertMessages, musicPlayer) {
     }
   }
 
-  function getUpcoming () {
+  function sortMessages () {
     const now = Date.now();
-    let lastTime = 0;
 
-    for (let message of alertMessages) {
-      const timeout = nextTime(message.queue.split(":")) - now;
-      if (timeout < 0) continue;
-      console.log("next up", timeout);
-      return {message, timeout};
+    return alertMessages
+      .map(addTimeSize)
+      .sort(byTimeSize)
+      .reduce(passedAndUpcoming, [[], []]);
+
+    function addTimeSize (msg) {
+      msg.timeSize = timeSize(msg.queue);
+      return msg;
     }
 
-    function nextTime (moment) {
-      let time = new Date(...today, ...moment).getTime();
-      if (time < lastTime) {
-        time = new Date(...tomorrow, ...moment).getTime();
-      }
-      lastTime = time;
-      return time;
+    function byTimeSize (a, b) {
+      return a.timeSize > b.timeSize;
+    }
+
+    function passedAndUpcoming (stacks, msg) {
+      const stack = now > msg.timeSize ? stacks[0] : stacks[1];
+      stack.push(msg);
+      return stacks;
+    }
+
+    function timeSize (timeString) {
+      const moment = timeString.split(":");
+      return new Date(...today, ...moment).getTime();
     }
   }
+
+  function getUpcoming () {
+     if (!upcomingMessages.length) {
+       upcomingMessages = passedMessages;
+       passedMessages = [];
+     }
+
+     return upcomingMessages[0];
+  }
+
 
   function toggleAlertState (on) {
     document.documentElement.classList.toggle("state-alert", on);

@@ -134,7 +134,6 @@
       }
 
       .alert-player__text > time {
-        color: #E81F2E;
         margin-right: 10px;
         font-weight: 700;
       }
@@ -172,7 +171,6 @@
           top: calc(100% - 48vw);
         }
       }
-
 
       .record {
         position: absolute;
@@ -261,7 +259,7 @@
     </style>
   </head>
   <body>
-    <audio id="music-player" controls style="width: 100%"></audio>
+    <audio id="music-player"></audio>
     <audio id="alert-player__audio"></audio>
     <main>
       <div class="controls">
@@ -287,17 +285,17 @@
       window.tracks = [
         // "audio/tom-waits_-_franks-theme.mp3",
         // "audio/brian-eno_-_blank-frank.mp3",
-        "audio/02-action_bronson-steve_wynn-noir.mp3#t=10,12"
+        "audio/02-action_bronson-steve_wynn-noir.mp3#t=1,146"
       ];
       // window.alertMessages = [];
       const now = new Date();
       const [hours, minutes] = [now.getHours(), now.getMinutes()];
       let i = 0;
-      window.alertMessages = Array(10).fill().map((_, index) => {
+      window.alertMessages = Array(2).fill().map((_, index) => {
         return {
           queue: (index % 2) ? `${hours}:${minutes + (++i)}` : `${hours}:${minutes + i}:30`,
-          audio: "audio/tunariffic.mp3",
-          text: `${index} Good for the Tuna!`
+          audio: "audio/horse.ogg",
+          text: `Hästpelle! ${index}`
         };
       });
       console.log(window.alertMessages);
