@@ -32,15 +32,6 @@
       }
 
 
-      main {
-        position: relative;
-        z-index: 1;
-        padding: 20px;
-        display: flex;
-        justify-content: center;
-        flex-direction: column;
-      }
-
       .radial-shine {
         position: relative;
         overflow: hidden;
@@ -88,7 +79,21 @@
       }
 
 
+      .controls,
+      .alert-player__text__wrapper {
+        z-index: 1;
+        transition: opacity 0.2s ease;
+        transition-delay: 0.15s;
+      }
+
+
       .controls {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        box-sizing: border-box;
+        padding: 20px;
         display: flex;
         justify-content: space-between;
       }
@@ -106,18 +111,30 @@
       }
 
 
-      .alert-player__text {
+      .alert-player__text__wrapper {
+        position: absolute;
+        left: 50%;
+        top: 0;
+        width: 100%;
+        box-sizing: border-box;
+        padding: 20px;
+        transform: translateX(-50%);
         opacity: 0;
-        transition: opacity 0.5s ease;
+        pointer-events: none;
+        display: flex;
+        justify-content: center;
+      }
+
+      .alert-player__text {
+        max-width: 800px;
         font-size: 40px;
-        max-width: 20em;
-        margin: 0 auto;
         font-style: italic;
         font-weight: 100;
         color: white;
-        display: flex;
-        position: relative;
         text-shadow: 1px 2px 1px rgba(0,0,0,0.05);
+        margin: 0;
+        position: relative;
+        padding-left: 50px;
       }
 
       .alert-player__text::before {
@@ -128,7 +145,7 @@
         font-style: normal;
         color: #E81F2E;
         position: absolute;
-        right: 100%;
+        left: 0;
         top: -0.1em;
         margin-right: 10px;
       }
@@ -136,6 +153,17 @@
       .alert-player__text > time {
         margin-right: 10px;
         font-weight: 700;
+      }
+
+      @media (min-width: 980px) {
+        .alert-player__text {
+          padding-left: 0;
+        }
+
+        .alert-player__text::before {
+          left: auto;
+          right: 100%;
+        }
       }
 
 
@@ -254,8 +282,14 @@
         background-position: bottom, top;
       }
 
-      .state-alert .alert-player__text {
+      .state-alert .controls {
+        opacity: 0;
+        pointer-events: none;
+      }
+
+      .state-alert .alert-player__text__wrapper {
         opacity: 1;
+        pointer-events: auto;
       }
     </style>
   </head>
@@ -267,7 +301,9 @@
         <button class="music-player__play-button" type="button">Play/pause</button>
         <button class="alert-player__repeat-button" type="button">Replay alert</button>
       </div>
-      <blockquote class="alert-player__text"></blockquote>
+      <div class="alert-player__text__wrapper">
+        <blockquote class="alert-player__text"></blockquote>
+      </div>
     </main>
 
     <figure class="turntable">
