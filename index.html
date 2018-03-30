@@ -151,7 +151,7 @@
         left: 49%;
         top: 49%;
         border-radius: 50%;
-        background-color: silver;
+        background-color: #999;
       }
 
       @media (orientation: portrait) {
@@ -202,30 +202,20 @@
         left: 49%;
         top: 49%;
         transform: rotateZ(45deg);
+        background: rgba(0,0,0,0.5);
+        box-shadow: 0 0 1vmax rgba(0,0,0,0.5);
+        border-radius: 50%;
       }
 
-      .record__turntable-pin-shadow::before,
       .record__turntable-pin-shadow::after {
         content: "";
         position: absolute;
-      }
-
-      .record__turntable-pin-shadow::before {
-        width: 130%;
-        height: 130%;
-        left: -15%;
-        top: -15%;
-        border-radius: 50%;
-        background: linear-gradient(to right, black, white);
-        opacity: 0.3;
-      }
-
-      .record__turntable-pin-shadow::after {
         width: 200%;
         height: 100%;
         left: 50%;
         top: 0;
-        background: linear-gradient(to right, rgba(0,0,0,0.5), rgba(0,0,0,0));
+        background: radial-gradient(circle at 0% 50%, black, transparent);
+        opacity: 0.4;
       }
 
 
