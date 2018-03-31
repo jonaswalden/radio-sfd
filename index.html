@@ -412,20 +412,22 @@
 
       window.messages = {
         vignetteAudio: "https://drive.google.com/uc?export=view&id=1U_179qXLzRrxJKBb44W8zomLT7lf14z6",
-        items: []
+        itemsCsvUrl: "https://docs.google.com/spreadsheets/d/e/2PACX-1vSOm2jJdkR4kfIm2py2T1-KTu3d5h6naSu8T5L3NcOoxapLkU-BHGZ3uErCgRfl7TL90ttcwm_7VN8n/pub?output=csv"
       };
 
-      const now = new Date();
-      const [hours, minutes] = [now.getHours(), now.getMinutes()];
-      let i = 0;
-      window.messages.items = Array(2).fill().map((_, index) => {
-        return {
-          queue: (index % 2) ? `${hours}:${minutes + (++i)}` : `${hours}:${minutes + i}:30`,
-          audio: window.messages.vignetteAudio,
-          text: `Hästpelle! ${index}`
-        };
-      });
-      console.log(window.messages.items);
+      // const now = new Date();
+      // const [hours, minutes] = [now.getHours(), now.getMinutes()];
+      // let i = 0;
+      // window.messages.items = Array(2).fill().map((_, index) => {
+      //   return {
+      //     queue: (index % 2) ? `${hours}:${minutes + (++i)}` : `${hours}:${minutes + i}:30`,
+      //     audio: window.messages.vignetteAudio,
+      //     text: `Hästpelle! ${index}`
+      //   };
+      // });
+      fetch(window.messages.itemsCsvUrl)
+        .then(data => data.text())
+        .then(console.log);
     </script>
     <script async src="scripts/main.js"></script>
 
