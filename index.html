@@ -20,15 +20,16 @@
             rgba(0, 0, 0, 0.06)
           ),
           linear-gradient(
-            rgb(31, 67, 136) 0%,
-            rgb(31, 67, 136) 33%,
+            hsl(219, 63%, 33%) 0%,
+            hsl(219, 63%, 33%) 33%,
             rgb(214, 214, 213) 66%,
             rgb(214, 214, 213) 100%
           );
         background-size: 100% 20%, 100% 300%;
         background-position: bottom, bottom;
         background-repeat: no-repeat;
-        transition: background-position 0.5s ease;
+        transition: 0.5s ease;
+        transition-property: background-image, background-position;
       }
 
 
@@ -111,6 +112,15 @@
       }
 
 
+      .music-player__play-button {
+        transition: background-color 0.2s ease;
+      }
+
+
+      .alert-player__repeat-button {
+        transition: filter 0.2s ease;
+      }
+
       .alert-player__text__wrapper {
         position: absolute;
         left: 50%;
@@ -143,7 +153,7 @@
         font-weight: 900;
         font-size: 2em;
         font-style: normal;
-        color: #E81F2E;
+        color: hsl(356, 81%, 52%);
         position: absolute;
         left: 0;
         top: -0.1em;
@@ -170,6 +180,7 @@
       .turntable {
         position: absolute;
         margin: 0;
+        transition: filter 0.2s ease;
       }
 
       .turntable__pin {
@@ -275,6 +286,36 @@
       .state-music .record,
       .state-music .record__label {
         animation-play-state: running;
+      }
+
+
+      .state-music-paused body {
+        background-image:
+          linear-gradient(
+            rgba(0, 0, 0, 0),
+            rgba(0, 0, 0, 0.06)
+          ),
+          linear-gradient(
+            hsl(219, 0%, 33%) 0%,
+            hsl(219, 0%, 33%) 33%,
+            rgb(214, 214, 213) 66%,
+            rgb(214, 214, 213) 100%
+          );
+      }
+
+      .state-music-paused .turntable,
+      .state-music-paused .alert-player__repeat-button {
+        filter: grayscale(100%);
+      }
+
+      .state-music-paused .music-player__play-button {
+        background-color: hsl(356, 81%, 52%);
+        animation: pulssatingShadow 2s infinite ease;
+      }
+
+      @keyframes pulssatingShadow {
+        0%, 100% { box-shadow: 0 0 30px 2px hsla(356, 91%, 72%, 90%); }
+        50% { box-shadow: 0 0 60px 2px hsla(356, 91%, 72%, 90%); }
       }
 
 

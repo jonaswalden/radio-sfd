@@ -76,6 +76,7 @@ function MusicPlayer (playlist) {
   function playPause () {
     if (disabled) return;
 
+    document.documentElement.classList.toggle("state-music-paused", playing);
     if (playing) audio.pause();
     else audio.play();
   }
