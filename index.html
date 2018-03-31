@@ -80,6 +80,12 @@
       }
 
 
+      .icon {
+        box-sizing: border-box;
+        fill: currentColor;
+      }
+
+
       .controls,
       .alert-player__text__wrapper {
         z-index: 1;
@@ -99,7 +105,7 @@
         justify-content: space-between;
       }
 
-      .controls > button {
+      .controls button {
         display: flex;
         width: 100px;
         height: 100px;
@@ -107,13 +113,39 @@
         justify-content: center;
         align-items: center;
         border: none;
-        background: #1F4388;
         color: #fff;
+        padding: 0;
+        background-color: hsl(219, 63%, 33%);
       }
+
+      .controls .music-player__play-button {
+        display: none;
+        background-color: hsl(356, 81%, 52%);
+      }
+
+      .controls button:focus {
+        outline: none;
+      }
+
+      .controls .icon {
+        width: 100%;
+      }
+
+      .controls .icon--replay { height: 70px }
+
+
+      .controls .icon--play { height: 55px; padding-left: 9px }
+      .controls .icon--pause { height: 50px }
 
 
       .music-player__play-button {
-        transition: background-color 0.2s ease;
+        background-color: hsl(356, 81%, 52%);
+        animation: glow 2s infinite ease;
+      }
+
+      @keyframes glow {
+        0%, 100% { box-shadow: 0 0 30px 2px hsl(356, 91%, 72%); }
+        50% { box-shadow: 0 0 60px 2px hsl(356, 91%, 72%); }
       }
 
 
@@ -309,13 +341,11 @@
       }
 
       .state-music-paused .music-player__play-button {
-        background-color: hsl(356, 81%, 52%);
-        animation: pulssatingShadow 2s infinite ease;
+        display: block;
       }
 
-      @keyframes pulssatingShadow {
-        0%, 100% { box-shadow: 0 0 30px 2px hsla(356, 91%, 72%, 90%); }
-        50% { box-shadow: 0 0 60px 2px hsla(356, 91%, 72%, 90%); }
+      .state-music-paused .music-player__pause-button {
+        display: none;
       }
 
 
@@ -339,8 +369,21 @@
     <audio id="alert-player__audio"></audio>
     <main>
       <div class="controls">
-        <button class="music-player__play-button" type="button">Play/pause</button>
-        <button class="alert-player__repeat-button" type="button">Replay alert</button>
+        <button class="music-player__pause-button" type="button">
+          <svg class="icon icon--pause">
+            <use xlink:href="#pause"></use>
+          </svg>
+        </button>
+        <button class="music-player__play-button" type="button">
+          <svg class="icon icon--play">
+            <use xlink:href="#play"></use>
+          </svg>
+        </button>
+        <button class="alert-player__repeat-button" type="button">
+          <svg class="icon icon--replay">
+            <use xlink:href="#replay"></use>
+          </svg>
+        </button>
       </div>
       <div class="alert-player__text__wrapper">
         <blockquote class="alert-player__text"></blockquote>
@@ -379,5 +422,36 @@
       console.log(window.alertMessages);
     </script>
     <script async src="scripts/main.js"></script>
+
+    <svg>
+    	<symbol id="pause" viewBox="0 0 124.5 124.5">
+    		<path d="M116.35,124.5c3.3,0,6-2.699,6-6V6c0-3.3-2.7-6-6-6h-36c-3.3,0-6,2.7-6,6v112.5c0,3.301,2.7,6,6,6H116.35z"/>
+    		<path d="M44.15,124.5c3.3,0,6-2.699,6-6V6c0-3.3-2.7-6-6-6h-36c-3.3,0-6,2.7-6,6v112.5c0,3.301,2.7,6,6,6H44.15z"/>
+    	</symbol>
+
+    	<symbol id="play" viewBox="0 0 124.512 124.512">
+    		<path d="M113.956,57.006l-97.4-56.2c-4-2.3-9,0.6-9,5.2v112.5c0,4.6,5,7.5,9,5.2l97.4-56.2
+    			C117.956,65.105,117.956,59.306,113.956,57.006z"/>
+    	</symbol>
+
+    	<symbol id="quote" viewBox="0 0 975.036 975.036">
+    		<path d="M925.036,57.197h-304c-27.6,0-50,22.4-50,50v304c0,27.601,22.4,50,50,50h145.5c-1.9,79.601-20.4,143.3-55.4,191.2
+    			c-27.6,37.8-69.399,69.1-125.3,93.8c-25.7,11.3-36.8,41.7-24.8,67.101l36,76c11.6,24.399,40.3,35.1,65.1,24.399
+    			c66.2-28.6,122.101-64.8,167.7-108.8c55.601-53.7,93.7-114.3,114.3-181.9c20.601-67.6,30.9-159.8,30.9-276.8v-239
+    			C975.036,79.598,952.635,57.197,925.036,57.197z"/>
+    		<path d="M106.036,913.497c65.4-28.5,121-64.699,166.9-108.6c56.1-53.7,94.4-114.1,115-181.2c20.6-67.1,30.899-159.6,30.899-277.5
+    			v-239c0-27.6-22.399-50-50-50h-304c-27.6,0-50,22.4-50,50v304c0,27.601,22.4,50,50,50h145.5c-1.9,79.601-20.4,143.3-55.4,191.2
+    			c-27.6,37.8-69.4,69.1-125.3,93.8c-25.7,11.3-36.8,41.7-24.8,67.101l35.9,75.8C52.336,913.497,81.236,924.298,106.036,913.497z"/>
+    	</symbol>
+
+    	<symbol id="replay" viewBox="0 0 305.836 305.836">
+    	 <path d="M152.924,300.748c84.319,0,152.912-68.6,152.912-152.918c0-39.476-15.312-77.231-42.346-105.564
+    		 c0,0,3.938-8.857,8.814-19.783c4.864-10.926-2.138-18.636-15.648-17.228l-79.125,8.289c-13.511,1.411-17.999,11.467-10.021,22.461
+    		 l46.741,64.393c7.986,10.992,17.834,12.31,22.008,2.937l7.56-16.964c12.172,18.012,18.976,39.329,18.976,61.459
+    		 c0,60.594-49.288,109.875-109.87,109.875c-60.591,0-109.882-49.287-109.882-109.875c0-19.086,4.96-37.878,14.357-54.337
+    		 c5.891-10.325,2.3-23.467-8.025-29.357c-10.328-5.896-23.464-2.3-29.36,8.031C6.923,95.107,0,121.27,0,147.829
+    		 C0,232.148,68.602,300.748,152.924,300.748z"/>
+    	</symbol>
+    </svg>
   </body>
 </html>

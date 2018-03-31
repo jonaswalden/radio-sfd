@@ -36,12 +36,14 @@ function Playlist (tracks) {
 
 function MusicPlayer (playlist) {
   const audio = document.getElementById("music-player");
-  const playButton = document.getElementsByClassName("music-player__play-button")[0];
+  const [pauseButton] = document.getElementsByClassName("music-player__pause-button");
+  const [playButton] = document.getElementsByClassName("music-player__play-button");
   let playing = false;
   let disabled = false;
   let wasPlayingWhenPaused = false;
 
   window.addEventListener("keyup", keyboardPlayPause);
+  pauseButton.addEventListener("click", playPause);
   playButton.addEventListener("click", playPause);
   audio.addEventListener("play", toggleMusicState);
   audio.addEventListener("pause", toggleMusicState);
