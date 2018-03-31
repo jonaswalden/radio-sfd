@@ -406,22 +406,26 @@
 
     <script>
       window.tracks = [
-        // "audio/tom-waits_-_franks-theme.mp3",
-        // "audio/brian-eno_-_blank-frank.mp3",
-        "audio/02-action_bronson-steve_wynn-noir.mp3#t=1,146"
+        "https://drive.google.com/uc?export=view&id=1J-gXQdqLCZtp8lEbMZLXLhJhhi_yKdLb#t=3.6,107",
+        "https://drive.google.com/uc?export=view&id=1ZJ5CKXBcdXvQVKi9fqtWHnnLvzfHjYQ6",
       ];
-      // window.alertMessages = [];
+
+      window.messages = {
+        vignetteAudio: "https://drive.google.com/uc?export=view&id=1U_179qXLzRrxJKBb44W8zomLT7lf14z6",
+        items: []
+      };
+
       const now = new Date();
       const [hours, minutes] = [now.getHours(), now.getMinutes()];
       let i = 0;
-      window.alertMessages = Array(2).fill().map((_, index) => {
+      window.messages.items = Array(2).fill().map((_, index) => {
         return {
           queue: (index % 2) ? `${hours}:${minutes + (++i)}` : `${hours}:${minutes + i}:30`,
-          audio: "audio/horse.ogg",
+          audio: window.messages.vignetteAudio,
           text: `Hästpelle! ${index}`
         };
       });
-      console.log(window.alertMessages);
+      console.log(window.messages.items);
     </script>
     <script async src="scripts/main.js"></script>
 

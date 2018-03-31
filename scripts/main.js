@@ -1,6 +1,6 @@
 "use strict";
 
-init(window.tracks, window.alertMessages);
+init(window.tracks, window.messages);
 
 if (typeof module !== "undefined") {
   module.exports = {
@@ -11,12 +11,12 @@ if (typeof module !== "undefined") {
   };
 }
 
-function init (tracks, alertMessages) {
-  if (!tracks || !alertMessages) return;
+function init (tracks, messages) {
+  if (!tracks || !messages) return;
 
   const playlist = Playlist(tracks);
   const musicPlayer = MusicPlayer(playlist);
-  schedule(alertMessages, musicPlayer);
+  schedule(messages, musicPlayer);
   musicPlayer.start();
 }
 
@@ -89,7 +89,7 @@ function MusicPlayer (playlist) {
   }
 }
 
-function schedule (alertMessages, musicPlayer) {
+function schedule ({items, vignetteAudio}, musicPlayer) {
   const audio = document.getElementById("alert-player__audio");
   const [text] = document.getElementsByClassName("alert-player__text");
   const [repeatButton] = document.getElementsByClassName("alert-player__repeat-button");
@@ -146,7 +146,7 @@ function schedule (alertMessages, musicPlayer) {
     queueNext();
 
     function playVignette () {
-      setAudioSource(audio, "audio/horse.ogg");
+      setAudioSource(audio, vignetteAudio);
       audio.play();
 
       return new Promise(resolve => {
@@ -168,7 +168,7 @@ function schedule (alertMessages, musicPlayer) {
   function sortMessages () {
     const now = Date.now();
 
-    return alertMessages
+    return items
       .map(addTimeSize)
       .sort(byTimeSize)
       .reduce(passedAndUpcoming, [[], []]);
