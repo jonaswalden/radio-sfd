@@ -1,22 +1,20 @@
 "use strict";
 
-init(window.tracks, window.messages);
+init();
 
 if (typeof module !== "undefined") {
   module.exports = {
     Playlist,
     MusicPlayer,
-    schedule,
+    mC,
     setAudioSource
   };
 }
 
-function init (tracks, messages) {
-  if (!tracks || !messages) return;
-
-  const playlist = Playlist(tracks);
+function init () {
+  const playlist = Playlist(window.tracks);
   const musicPlayer = MusicPlayer(playlist);
-  schedule(messages, musicPlayer);
+  mC(window.scheduleUrl, window.messages, musicPlayer);
   musicPlayer.start();
 }
 
@@ -42,9 +40,9 @@ function MusicPlayer (playlist) {
   let disabled = false;
   let wasPlayingWhenPaused = false;
 
-  window.addEventListener("keyup", keyboardPlayPause);
   pauseButton.addEventListener("click", playPause);
   playButton.addEventListener("click", playPause);
+  window.addEventListener("keyup", keyboardPlayPause);
   audio.addEventListener("play", toggleMusicState);
   audio.addEventListener("pause", toggleMusicState);
 
@@ -71,8 +69,7 @@ function MusicPlayer (playlist) {
   }
 
   function keyboardPlayPause (event) {
-    if (![" "].includes(event.key)) return;
-    playPause();
+    if (event.key === " ") playPause();
   }
 
   function playPause () {
@@ -89,31 +86,34 @@ function MusicPlayer (playlist) {
   }
 }
 
-async function schedule ({itemsCsvUrl, vignetteAudio}, musicPlayer) {
+async function mC (scheduleUrl, messages, musicPlayer) {
   const audio = document.getElementById("alert-player__audio");
   const [text] = document.getElementsByClassName("alert-player__text");
   const [repeatButton] = document.getElementsByClassName("alert-player__repeat-button");
-  if (!audio || !text) return;
-
   const date = new Date();
   const thisMonth = [date.getFullYear(), date.getMonth()];
   const today = [...thisMonth, date.getDate()];
   const tomorrow = [...thisMonth, today[2] + 1];
-  const messages = await getMessages();
-  console.log(messages);
-  let [passedMessages, upcomingMessages] = sortMessages();
+  const schedule = await getSchedule();
+  const vignetteAudio = "audio/messages/vignette.ogg";
+  console.log(schedule);
+
+  repeatButton.addEventListener("click", repeatLast);
+  window.addEventListener("keyup", keyboardRepeatLast);
 
   queueNext();
 
-  if (repeatButton) {
-    repeatButton.addEventListener("click", repeatLast);
-  }
+  function getSchedule () {
+    if (window.debugSchedule) {
+      return Promise.resolve(window.debugSchedule)
+        .then(sortSchedule);
+    }
 
-  function getMessages () {
-    return fetch(itemsCsvUrl)
+    return fetch(scheduleUrl)
       .then(data => data.text())
       .then(CSVToArray)
-      .then(toItemList);
+      .then(toItemList)
+      .then(sortSchedule)
 
     function toItemList (list) {
       const [keys, ...rows] = list;
@@ -141,19 +141,25 @@ async function schedule ({itemsCsvUrl, vignetteAudio}, musicPlayer) {
     window.setTimeout(playNext, timeout);
 
     function playNext () {
-      play(upcoming);
-      passedMessages.push(upcomingMessages.shift());
+      play(upcoming.message);
+      schedule.passed.push(schedule.upcoming.shift());
     }
   }
 
   function repeatLast () {
-    const last = passedMessages[passedMessages.length - 1];
+    const last = schedule.passed[schedule.passed.length - 1];
     if (!last) return;
 
-    play(last);
+    play(last.message);
   }
 
-  async function play (message) {
+  function keyboardRepeatLast (event) {
+    if (event.key === "backspace") repeatLast();
+  }
+
+  async function play (messageKey) {
+    const messageAudio = `audio/messages/${messageKey}.mp4`;
+    const messageText = messages[messageKey];
     text.textContent = "...";
     toggleAlertState(true);
     musicPlayer.pause();
@@ -176,9 +182,9 @@ async function schedule ({itemsCsvUrl, vignetteAudio}, musicPlayer) {
     }
 
     function playMessage () {
-      setAudioSource(audio, message.audio);
+      setAudioSource(audio, messageAudio);
       audio.play();
-      text.innerHTML = `<time>${message.queue}</time> ${message.text}`;
+      text.innerHTML = messageText;
 
       return new Promise(resolve => {
         audio.addEventListener("ended", resolve, {once: true});
@@ -186,13 +192,13 @@ async function schedule ({itemsCsvUrl, vignetteAudio}, musicPlayer) {
     }
   }
 
-  function sortMessages () {
+  function sortSchedule (events) {
     const now = Date.now();
 
-    return messages
+    return events
       .map(addTimeSize)
       .sort(byTimeSize)
-      .reduce(passedAndUpcoming, [[], []]);
+      .reduce(alignToTime, {passed: [], upcoming: []});
 
     function addTimeSize (msg) {
       msg.timeSize = timeSize(msg.queue);
@@ -203,8 +209,8 @@ async function schedule ({itemsCsvUrl, vignetteAudio}, musicPlayer) {
       return a.timeSize > b.timeSize;
     }
 
-    function passedAndUpcoming (stacks, msg) {
-      const stack = now > msg.timeSize ? stacks[0] : stacks[1];
+    function alignToTime (stacks, msg) {
+      const stack = now > msg.timeSize ? stacks.passed : stacks.upcoming;
       stack.push(msg);
       return stacks;
     }
@@ -216,12 +222,12 @@ async function schedule ({itemsCsvUrl, vignetteAudio}, musicPlayer) {
   }
 
   function getUpcoming () {
-     if (!upcomingMessages.length) {
-       upcomingMessages = passedMessages;
-       passedMessages = [];
+     if (!schedule.upcoming.length) {
+       schedule.upcoming = schedule.passed;
+       schedule.passed = [];
      }
 
-     return upcomingMessages[0];
+     return schedule.upcoming[0];
   }
 
   function toggleAlertState (on) {

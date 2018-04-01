@@ -406,28 +406,36 @@
 
     <script>
       window.tracks = [
-        "https://drive.google.com/uc?export=view&id=1J-gXQdqLCZtp8lEbMZLXLhJhhi_yKdLb#t=3.6,107",
-        "https://drive.google.com/uc?export=view&id=1ZJ5CKXBcdXvQVKi9fqtWHnnLvzfHjYQ6",
+        "audio/music/track-a.mp3#t=3.6,107",
+        "audio/music/track-b.mp3",
       ];
 
       window.messages = {
-        vignetteAudio: "https://drive.google.com/uc?export=view&id=1U_179qXLzRrxJKBb44W8zomLT7lf14z6",
-        itemsCsvUrl: "https://docs.google.com/spreadsheets/d/e/2PACX-1vSOm2jJdkR4kfIm2py2T1-KTu3d5h6naSu8T5L3NcOoxapLkU-BHGZ3uErCgRfl7TL90ttcwm_7VN8n/pub?output=csv"
+        "balkongracke": "Den som är sist med att nudda balkongräcket får hälla halva sin dryck i häxan",
+        "bradspel": "Håll i hatten! Nu är det dags för brädspel!",
+        "byt-dryck": "Byt dryck med någon!",
+        "fyll-pa": "Fyll på din drink",
+        "imitera-slut": "Slut på imitation",
+        "imitera": "Imitera en person som är på Saint Frank’s Day-firandet just nu.",
+        "kurragomma": "Kurragömma! Markus Waldén du letar. Nu andra har 30 s på er att gömma er. Börja NU!",
+        "ledartroja-1": "Den som leder ska krönas med SFD-ledartröja!",
+        "ledartroja-2": "Ledartröjan ska vidare!",
+        "mellannamn": "Alla som har mellannamn måste dricka tre klunkar. Har du två mellannamn: 6 klunkar.",
+        "prickskytte": "Dags för prickskytte!",
+        "rekvisita": "Ta på dig rekvisita",
       };
 
-      // const now = new Date();
-      // const [hours, minutes] = [now.getHours(), now.getMinutes()];
-      // let i = 0;
-      // window.messages.items = Array(2).fill().map((_, index) => {
-      //   return {
-      //     queue: (index % 2) ? `${hours}:${minutes + (++i)}` : `${hours}:${minutes + i}:30`,
-      //     audio: window.messages.vignetteAudio,
-      //     text: `Hästpelle! ${index}`
-      //   };
-      // });
-      fetch(window.messages.itemsCsvUrl)
-        .then(data => data.text())
-        .then(console.log);
+      window.scheduleUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSOm2jJdkR4kfIm2py2T1-KTu3d5h6naSu8T5L3NcOoxapLkU-BHGZ3uErCgRfl7TL90ttcwm_7VN8n/pub?output=csv";
+
+      const now = new Date();
+      const [hours, minutes] = [now.getHours(), now.getMinutes()];
+      let i = 0;
+      window.debugSchedule = Array(2).fill().map((_, index) => {
+        return {
+          queue: (index % 2) ? `${hours}:${minutes + (++i)}` : `${hours}:${minutes + i}:30`,
+          message: "fyll-pa",
+        };
+      });
     </script>
     <script async src="scripts/main.js"></script>
 
