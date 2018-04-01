@@ -139,12 +139,12 @@ async function mC (scheduleUrl, messages, musicPlayer) {
   queueNext();
 
   function getSchedule () {
-    if (window.debugSchedule) {
-      return Promise.resolve(window.debugSchedule)
+    if (window.location.hash === "#dev") {
+      return Promise.resolve(window.devSchedule)
         .then(sortSchedule);
     }
 
-    return fetch(scheduleUrl)
+    return fetch(scheduleUrl, {mode: "cors"})
       .then(data => data.text())
       .then(CSVToArray)
       .then(toItemList)

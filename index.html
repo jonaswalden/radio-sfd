@@ -429,7 +429,7 @@
       const now = new Date();
       const [hours, minutes] = [now.getHours(), now.getMinutes()];
       let i = 0;
-      window.debugSchedule = Array(2).fill().map((_, index) => {
+      window.devSchedule = Array(2).fill().map((_, index) => {
         return {
           queue: (index % 2) ? `${hours}:${minutes + (++i)}` : `${hours}:${minutes + i}:30`,
           message: "fyll-pa",
