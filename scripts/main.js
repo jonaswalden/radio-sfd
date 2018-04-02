@@ -249,7 +249,8 @@ async function mC (scheduleUrl, messages, musicPlayer) {
     }
 
     function byTimeSize (a, b) {
-      return a.timeSize > b.timeSize;
+
+      return a.timeSize > b.timeSize ? 1 : -1;
     }
 
     function alignToTime (stacks, msg) {
