@@ -148,6 +148,7 @@ async function mC (scheduleUrl, messages, musicPlayer) {
       .then(data => data.text())
       .then(CSVToArray)
       .then(toItemList)
+      .then(removeEmpty)
       .then(sortSchedule)
 
     function toItemList (list) {
@@ -160,6 +161,12 @@ async function mC (scheduleUrl, messages, musicPlayer) {
           return obj;
         }, {});
       }
+    }
+
+    function removeEmpty (objList) {
+      return objList.filter(obj => {
+        return !Object.values(obj).includes("");
+      });
     }
   }
 
