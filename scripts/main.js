@@ -79,6 +79,7 @@ function MusicPlayer (playlist) {
   window.addEventListener("keyup", keyboardPlayPause);
   audio.addEventListener("play", toggleMusicState);
   audio.addEventListener("pause", toggleMusicState);
+  audio.volume = 0.4;
 
   return {
     audio,
