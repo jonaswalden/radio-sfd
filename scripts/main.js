@@ -200,7 +200,7 @@ async function mC (scheduleUrl, messages, musicPlayer) {
   }
 
   async function play (messageKey) {
-    const messageAudio = `audio/messages/${messageKey}.mp4`;
+    const messageAudio = `audio/messages/${messageKey}.mp3`;
     const messageText = messages[messageKey];
     text.textContent = "...";
     toggleAlertState(true);
