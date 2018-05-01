@@ -1,15 +1,15 @@
-"use strict";
+'use strict';
 
-const {test} = require("ava");
-const addMediaInterface = require("./helpers/addMediaInterface");
-const addTimeout = require("./helpers/addTimeout");
-const ck = require("chronokinesis");
-const navigate = require("./helpers/navigate");
+const {test} = require('ava');
+const addMediaInterface = require('./helpers/addMediaInterface');
+const addTimeout = require('./helpers/addTimeout');
+const ck = require('chronokinesis');
+const navigate = require('./helpers/navigate');
 
-const today = "2012-04-02";
+const today = '2012-04-02';
 let browser, timeouts;
 test.beforeEach(async () => {
-  browser = await navigate.toDomString(`
+	browser = await navigate.toDomString(`
     <html>
       <audio id="alert-player__audio"></audio>
       <blockquote class="alert-player__text"></blockquote>
@@ -18,85 +18,85 @@ test.beforeEach(async () => {
       </button>
     </html>
   `);
-  addTimeout(browser.window, timeouts = []);
+	addTimeout(browser.window, timeouts = []);
 });
 
 let alertAudio, alertText, alertRepeat;
 test.beforeEach(t => {
-  alertAudio = browser.document.getElementById("alert-player__audio");
-  t.truthy(alertAudio);
-  addMediaInterface(alertAudio);
+	alertAudio = browser.document.getElementById('alert-player__audio');
+	t.truthy(alertAudio);
+	addMediaInterface(alertAudio);
 
-  [alertText] = browser.document.getElementsByClassName("alert-player__text");
-  t.truthy(alertText);
+	[alertText] = browser.document.getElementsByClassName('alert-player__text');
+	t.truthy(alertText);
 
-  [alertRepeat] = browser.document.getElementsByClassName("alert-player__repeat-button");
-  t.truthy(alertRepeat);
+	[alertRepeat] = browser.document.getElementsByClassName('alert-player__repeat-button');
+	t.truthy(alertRepeat);
 });
 
 let mc;
 test.beforeEach(() => {
-  mc = require("../scripts/mc").default;
+	mc = require('../scripts/mc').default;
 });
 
 let musicPlayer;
 test.beforeEach(() => {
-  musicPlayer = {
-    _playing: true,
-    pause() {
-      this._playing = false;
-    },
-    resume() {
-      this._playing = true;
-    },
-  };
+	musicPlayer = {
+		_playing: true,
+		pause() {
+			this._playing = false;
+		},
+		resume() {
+			this._playing = true;
+		},
+	};
 });
 
 test.afterEach(() => {
-  ck.reset();
-  delete global.window;
-  delete global.document;
+	ck.reset();
+	delete global.window;
+	delete global.document;
 });
 
-test("skips passed key tracks", async t => {
-  ck.freeze(`${today} 10:00`);
-  const messages = {
-    "no": {text: "nope", audio: "audio/nope.mp3"},
-    "a": {text: "Message a", audio: "audio/message-a.mp3"},
-  };
-  const schedule = {
-    passed: [],
-    upcoming: [
-      {queue: "10:00", message: "a"},
-    ]
-  };
+test('skips passed key tracks', async t => {
+	ck.freeze(`${today} 10:00`);
+	const messages = {
+		'no': {text: 'nope', audio: 'audio/nope.mp3'},
+		'a': {text: 'Message a', audio: 'audio/message-a.mp3'},
+	};
+	const schedule = {
+		passed: [],
+		upcoming: [
+			{queue: '10:00', message: 'a'},
+		]
+	};
 
-  mc(schedule, messages, musicPlayer);
-  t.true(musicPlayer._playing);
-  t.false(browser.document.documentElement.classList.contains("state-alert"));
+	mc(schedule, messages, musicPlayer);
+	t.true(musicPlayer._playing);
+	t.false(browser.document.documentElement.classList.contains('state-alert'));
 
-  assertTimeout(t, 0);
+	assertTimeout(t, 0);
 
-  t.is(alertAudio.src, "audio/messages/vignette.ogg");
-  t.is(alertText.textContent, "...");
-  t.true(browser.document.documentElement.classList.contains("state-alert"));
-  t.false(musicPlayer._playing);
+	t.is(alertAudio.src, 'audio/messages/vignette.ogg');
+	t.is(alertText.textContent, '...');
+	t.true(browser.document.documentElement.classList.contains('state-alert'));
+	t.false(musicPlayer._playing);
 
-  alertAudio._emitter.emit("ended");
-  await awaitAsync();
+	alertAudio._emitter.emit('ended');
+	await awaitAsync();
 
-  t.is(alertAudio.src, "audio/message-a.mp3");
-  t.is(alertText.textContent, "Message a");
-  t.true(browser.document.documentElement.classList.contains("state-alert"));
-  t.false(musicPlayer._playing);
+	t.is(alertAudio.src, 'audio/message-a.mp3');
+	t.is(alertText.textContent, 'Message a');
+	t.true(browser.document.documentElement.classList.contains('state-alert'));
+	t.false(musicPlayer._playing);
 
-  alertAudio._emitter.emit("ended");
-  await awaitAsync();
+	alertAudio._emitter.emit('ended');
+	await awaitAsync();
 
-  assertTimeout(t, 500);
-  await awaitAsync();
+	assertTimeout(t, 500);
+	await awaitAsync();
 
-  t.false(browser.document.documentElement.classList.contains("state-alert"));
+	t.false(browser.document.documentElement.classList.contains('state-alert'));
 });
 
 //
@@ -143,13 +143,13 @@ test("skips passed key tracks", async t => {
 // });
 
 function assertTimeout (t, expectedTimeout) {
-  t.is(timeouts.length, 1);
-  const [fn, timeout] = timeouts.pop();
+	t.is(timeouts.length, 1);
+	const [fn, timeout] = timeouts.pop();
 
-  t.is(expectedTimeout, timeout);
-  fn();
+	t.is(expectedTimeout, timeout);
+	fn();
 }
 
 function awaitAsync () {
-  return new Promise(r => setTimeout(r));
+	return new Promise(r => setTimeout(r));
 }

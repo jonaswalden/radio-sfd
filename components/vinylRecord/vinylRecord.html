@@ -1,10 +1,18 @@
 <template>
   <style>
-    slot { display: none; }
+    .tracks { display: none; }
+    li::before { content: attr('data-src'); }
   </style>
 
-  <slot name="side-a"></slot>
-  <slot name="side-b"></slot>
+  <div class="tracks">
+    <slot name="side-a"></slot>
+    <slot name="side-b"></slot>
+    <slot name="side-c"></slot>
+    <slot name="side-d"></slot>
+  </div>
+
+  <img class="wax" src="images/record.svg">
+  <img class="label" src="images/label.svg">
 </template>
 
 <script src="./vinylRecord.js"></script>

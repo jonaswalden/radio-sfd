@@ -9,6 +9,8 @@ module.exports = {
   extends: "eslint:recommended",
   rules: {
     "no-cond-assign": "off",
-    "quotes": ["warn", "single", {avoidEscape: true}]
+    "quotes": ["warn", "single", {avoidEscape: true}],
+    "no-console": ["warn"],
+    "indent": ["warn", 2]
   },
 };

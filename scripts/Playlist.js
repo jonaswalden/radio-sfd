@@ -20,26 +20,26 @@ export default function Playlist (tracks) {
 
   function getFromCache () {
     cacheChecked = true;
-    const cache = localStorage.getItem("playingTrack");
-    localStorage.removeItem("playingTrack");
+    const cache = localStorage.getItem('playingTrack');
+    localStorage.removeItem('playingTrack');
     if (!cache) return;
 
-    const [trackIndexString, time] = cache.split("@");
+    const [trackIndexString, time] = cache.split('@');
     currentTrackIndex = Number(trackIndexString);
     const track = tracks[currentTrackIndex % amountTracks];
 
-    if (!track.includes("#t=")) return track + "#t=" + time;
+    if (!track.includes('#t=')) return track + '#t=' + time;
 
-    let [path, anchor] = track.split("#t=");
-    const [end] = anchor.split(",");
-    return path + "#t=" + [time, end].filter(t => t).join(",")
+    let [path, anchor] = track.split('#t=');
+    const [end] = anchor.split(',');
+    return path + '#t=' + [time, end].filter(t => t).join(',')
   }
 
   function initCache (audio) {
-    window.addEventListener("beforeunload", cachePlayingTrack);
+    window.addEventListener('beforeunload', cachePlayingTrack);
 
     function cachePlayingTrack () {
-      localStorage.setItem("playingTrack", currentTrackIndex + "@" + audio.currentTime);
+      localStorage.setItem('playingTrack', currentTrackIndex + '@' + audio.currentTime);
     }
   }
 }

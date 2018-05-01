@@ -1,25 +1,47 @@
+const componentDocument = document.currentScript.ownerDocument;
 
 customElements.define('vinyl-record', class VinylRecord extends HTMLElement {
   constructor () {
     super();
-    const doc = document.currentScript.ownerDocument;
-    const [template] = doc.getElementsByTagName("template");
+    const [template] = componentDocument.getElementsByTagName('template');
 
     this.attachShadow({mode: 'open'})
-      .appendChild(template.content.cloneNode(true));
+      .appendChild(componentDocument.importNode(template.content, true));
 
-    this.sideA = toTrackList(this.querySelector('[slot="side-a"]'));
-    this.sideB = toTrackList(this.querySelector('[slot="side-b"]'));
-    this.tracks = [...this.sideA, ...this.sideB];
-    this.currentTrackIndex = this.tracks.length + 1;
+    this.currentTrackIndex = 0;
+    this.currentSideIndex = 0;
   }
+
+  connectedCallback () {
+    this.tracks = toTrackList(this.querySelectorAll('[slot]'));
+  }
+
+  get currentTrack () {
+    return this.tracks[this.currentSideIndex][this.currentTrackIndex];
+  }
+
   nextTrack () {
-    return this.tracks[++this.currentTrackIndex % this.tracks.length];
+    const {tracks} = this;
+    return track(this.currentSideIndex, ++this.currentTrackIndex)
+      || track(++this.currentSideIndex, this.currentTrackIndex = 0)
+      || track(this.currentSideIndex = 0, this.currentTrackIndex);
+
+    function track (sideIndex, trackIndex) {
+      return tracks[sideIndex] && tracks[sideIndex][trackIndex];
+    }
   }
 });
 
-function toTrackList (list) {
-  return Array.prototype.map.call(list.children, item => item.dataset.src);
+function toTrackList (slots) {
+  return Array.prototype.map.call(slots, slotToSide);
+
+  function slotToSide (slot) {
+    return Array.prototype.map.call(slot.children, itemToTrack);
+  }
+
+  function itemToTrack (item) {
+    return item.dataset.src;
+  }
 }
 //
 // function Playlist (tracks) {

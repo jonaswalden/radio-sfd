@@ -9,7 +9,11 @@ customElements.define('record-player', class RecordPlayer extends HTMLElement {
     shadow.appendChild(template.content.cloneNode(true));
 
     Object.assign(this, _RecordPlayer(this));
-    this.start()
+  }
+
+  connectedCallback () {
+    this.record = this.querySelector('vinyl-record');
+    this.start();
   }
 });
 
@@ -26,14 +30,13 @@ function _RecordPlayer (element) {
   window.addEventListener('keyup', keyboardPlayPause);
   audio.addEventListener('play', toggleMusicState);
   audio.addEventListener('pause', toggleMusicState);
+  audio.addEventListener('ended', playNext);
   audio.volume = 0.4;
-  const record = element.querySelector('vinyl-record');
 
   return {
     audio,
     start () {
-      playNext();
-      audio.addEventListener('ended', playNext);
+      play(this.record.currentTrack);
     },
     pause () {
       disabled = true;
@@ -47,9 +50,13 @@ function _RecordPlayer (element) {
     }
   };
 
-  function playNext () {
-    audio.src = record.nextTrack();
+  function play (track) {
+    audio.src = track;
     audio.play();
+  }
+
+  function playNext () {
+    play(this.record.nextTrack());
   }
 
   function keyboardPlayPause (event) {
