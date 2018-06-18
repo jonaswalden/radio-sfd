@@ -3,7 +3,7 @@ const componentDocument = document.currentScript.ownerDocument;
 customElements.define('vinyl-record', class VinylRecord extends HTMLElement {
   constructor () {
     super();
-    const [template] = componentDocument.getElementsByTagName('template');
+    const template = componentDocument.querySelector('template');
 
     this.attachShadow({mode: 'open'})
       .appendChild(componentDocument.importNode(template.content, true));
@@ -14,20 +14,47 @@ customElements.define('vinyl-record', class VinylRecord extends HTMLElement {
 
   connectedCallback () {
     this.tracks = toTrackList(this.querySelectorAll('[slot]'));
+    this.addEventListener('click', () => this.nextTrack());
   }
 
   get currentTrack () {
     return this.tracks[this.currentSideIndex][this.currentTrackIndex];
   }
 
-  nextTrack () {
+  async nextTrack () {
+    const previousSide = this.currentSideIndex;
     const {tracks} = this;
-    return track(this.currentSideIndex, ++this.currentTrackIndex)
-      || track(++this.currentSideIndex, this.currentTrackIndex = 0)
-      || track(this.currentSideIndex = 0, this.currentTrackIndex);
+    const track = getTrack(this.currentSideIndex, ++this.currentTrackIndex)
+      || getTrack(++this.currentSideIndex, this.currentTrackIndex = 0)
+      || getTrack(this.currentSideIndex = 0, this.currentTrackIndex);
 
-    function track (sideIndex, trackIndex) {
+    if (previousSide !== this.currentSideIndex) {
+      await this.flip();
+    }
+
+    return track;
+
+    function getTrack (sideIndex, trackIndex) {
       return tracks[sideIndex] && tracks[sideIndex][trackIndex];
+    }
+  }
+
+  async flip () {
+    let element = this;
+    const nextSideRotation = 0;
+
+    let transition = Transition('ease-in');
+    this.style.transform = `rotateX(${nextSideRotation - 90}deg)`;
+    await transition;
+    this.style.filter = `hue-rotate(${this.currentSideIndex * 90}deg)`;
+    this.style.transform = `rotateX(${nextSideRotation + 90}deg)`;
+    transition = Transition('ease-out');
+    this.style.transform = `rotateX(${nextSideRotation}deg)`;
+    await transition;
+
+    function Transition (easing) {
+      element.style.transition = `transform 0.5s ${easing}`;
+      return new Promise(resolve => element.addEventListener('transitionend', resolve, {once: true}));
     }
   }
 });

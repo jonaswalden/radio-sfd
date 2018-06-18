@@ -3,7 +3,7 @@ customElements.define('record-player', class RecordPlayer extends HTMLElement {
   constructor () {
     super();
     const doc = document.currentScript.ownerDocument;
-    const [template] = doc.getElementsByTagName('template');
+    const template = doc.querySelector('template');
 
     const shadow = this.attachShadow({mode: 'open'});
     shadow.appendChild(template.content.cloneNode(true));
@@ -13,7 +13,7 @@ customElements.define('record-player', class RecordPlayer extends HTMLElement {
 
   connectedCallback () {
     this.record = this.querySelector('vinyl-record');
-    this.start();
+    // this.start();
   }
 });
 

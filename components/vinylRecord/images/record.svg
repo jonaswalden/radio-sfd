@@ -7,6 +7,10 @@
 	#shine path:nth-child(24) {
 		display: none;
 	}
+
+	#wax:target {
+		fill: rgba(240,0,0,.5) !important;
+	}
 </style>
 <path id="wax" fill="#E81F2E" d="M578,289c0,159.627-129.373,289-289,289S0,448.627,0,289S129.373,0,289,0S578,129.373,578,289z"/>
 <defs>

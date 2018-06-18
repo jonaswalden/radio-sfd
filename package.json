@@ -2,12 +2,13 @@
   "name": "sfd-radio",
   "version": "1.0.0",
   "description": "music player for Saint Frank's Day holiday festivities",
-  "main": "index.js",
+  "private": true,
   "directories": {
     "lib": "lib",
     "test": "test"
   },
   "scripts": {
+    "start": "http-server . -p 3000",
     "test": "ava"
   },
   "author": "",

@@ -1,6 +1,13 @@
 <link rel="import" href="../hardRangeEnd/hardRangeEnd.html">
 
 <template>
+  <style>
+    :host { display: inline-block; }
+
+    audio { display: none; }
+
+    ::slotted(vinyl-record) { display: block; width: 100%; }
+  </style>
   <audio controls is="hard-range-end"></audio>
   <slot name="record"></slot>
 </template>
