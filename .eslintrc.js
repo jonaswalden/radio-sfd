@@ -11,6 +11,7 @@ module.exports = {
     "no-cond-assign": "off",
     "quotes": ["warn", "single", {avoidEscape: true}],
     "no-console": ["warn"],
-    "indent": ["warn", 2]
+    "indent": ["warn", 2],
+    "comma-dangle": ["warn", "always-multiline"],
   },
 };
