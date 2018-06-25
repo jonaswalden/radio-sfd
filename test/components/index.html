@@ -3,19 +3,19 @@
   <head>
     <meta charset="utf-8">
     <title>Mocha Tests</title>
-    <link href="https://unpkg.com/mocha@5.1.1/mocha.css" rel="stylesheet" />
-    <script src="https://unpkg.com/mocha@5.1.1/mocha.js"></script>
-    <script src="https://unpkg.com/chai@4.1.2/chai.js"></script>
-    <link rel="import" href="../../components/vinylRecord/vinylRecord.html">
+    <link href="/node_modules/mocha/mocha.css" rel="stylesheet" />
     <style>
       body { background: #282c34; color: #ebebff; }
-      #mocha { font-family: 'source code pro bold', monospace; }
+      #mocha { font-family: 'source code pro bold', monospace; width: 50%; position: fixed; }
       #mocha-stats { color: #abb2bf; }
       #mocha-stats em { color: #ebebff; }
+      #app-frame { width: 50%; position: absolute; right: 50px; top: 60px; bottom: 60px; }
     </style>
   </head>
   <body>
     <div id="mocha"></div>
+    <iframe id="app-frame"></iframe>
+
     <script type="module" src="setup.js"></script>
     <script type="module" src="run.js"></script>
   </body>
