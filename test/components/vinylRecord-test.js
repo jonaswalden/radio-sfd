@@ -1,77 +1,99 @@
-import '../../node_modules/mocha/mocha.js';
-import '../../node_modules/chai/chai.js';
+'use strict';
 
-import {navigateToDomString} from './browser.js';
-const {expect} = chai;
+const {expect} = require('chai');
+const {addResource, navigateTo, close} = require('./browser');
 
 describe('<vinyl-record/>', () => {
-  let browser;
+  const resourceUrl = addResource(`
+    <link rel="import" href="/components/vinylRecord/vinylRecord.html">
 
-  async function navigate () {
-    browser = await navigateToDomString(`
-      <!doctype html>
-      <head>
-        <script src="/scripts/mc.js"></script>
-        <link rel="import" href="/components/vinylRecord/vinylRecord.html">
-      </head>
-      <body>
-        <vinyl-record>
-          <ul slot="side-a">
-            <li data-src="0"></li>
-            <li data-src="1"></li>
-          </ul>
-          <ul slot="side-b">
-            <li data-src="2"></li>
-          </ul>
-          <ul slot="side-c">
-            <li data-src="3"></li>
-            <li data-src="4"></li>
-            <li data-src="5"></li>
-          </ul>
-        </vinyl-string>
-        <script>
-          console.log("whaaat?");
-        </script>
-      </body>
-    `);
-  }
+    <vinyl-record>
+      <ul slot="side-a">
+        <li data-src="0">
+        <li data-src="1">
+      </ul>
+      <ul slot="side-b">
+        <li data-src="2">
+      </ul>
+      <ul slot="side-c">
+        <li data-src="3">
+        <li data-src="4">
+        <li data-src="5">
+      </ul>
+    </vinyl-string>
+    <script>
+      console.log("'ello poppet!");
+    </script>
+  `);
+
+  after(close);
+
+  it('component is set up', async () => {
+    const page = await navigateTo(resourceUrl);
+
+    const recordHandle = await page.$('vinyl-record');
+    expect(recordHandle).to.be.ok;
+
+    const tagName = await page.evaluate(record => record.tagName, recordHandle);
+    expect(tagName).to.equal('VINYL-RECORD');
+
+    const customProp = await page.evaluate(record => record.currentTrackIndex, recordHandle);
+    expect(customProp).to.not.be.undefined;
+
+    await recordHandle.dispose();
+  });
 
   describe('.currentTrack', () => {
-    before(navigate);
-
-    let record;
-    before(() => {
-      record = browser.document.querySelector('vinyl-record');
+    let page, recordHandle;
+    before(async () => {
+      page = await navigateTo(resourceUrl);
+      recordHandle = await page.$('vinyl-record');
     });
 
-    it('is the source of the current track', () => {
-      expect(record.currentTrack).to.equal('0');
+    after(async () => {
+      await recordHandle.dispose();
+    });
+
+    it('is the source of the current track', async () => {
+      const currentTrack = await page.evaluate(record => record.currentTrack, recordHandle);
+      expect(currentTrack).to.equal('0');
     });
   });
 
   describe('.nextTrack()', () => {
-    before(navigate);
-
-    let record;
-    before(() => {
-      record = browser.document.querySelector('vinyl-record');
+    let page, recordHandle;
+    before(async () => {
+      page = await navigateTo(resourceUrl);
+      recordHandle = await page.$('vinyl-record');
     });
 
-    it('gets next track and sets it to .currentTrack', () => {
-      expect(record.currentTrack).to.equal('0');
-      expect(record.nextTrack()).to.equal('1');
-      expect(record.currentTrack).to.equal('1');
+    it('gets next track and sets it to .currentTrack', async () => {
+      let currentTrack = await page.evaluate(record => record.currentTrack, recordHandle);
+      expect(currentTrack).to.equal('0');
+
+      let nextTrack = await page.evaluate(record => record.nextTrack(), recordHandle);
+      expect(nextTrack).to.equal('1');
+
+      currentTrack = await page.evaluate(record => record.currentTrack, recordHandle);
+      expect(currentTrack).to.equal('1');
     });
 
-    it('gets next track from next side', () => {
-      expect(record.nextTrack()).to.equal('2');
+    it('gets next track from next side', async () => {
+      const nextTrack = await page.evaluate(record => record.nextTrack(), recordHandle);
+      expect(nextTrack).to.equal('2');
     });
 
-    it('get first track after last track', () => {
-      record.nextTrack();
-      record.nextTrack();
-      expect(record.nextTrack()).to.equal('5');
-      expect(record.nextTrack()).to.equal('0');
+    it('get first track after last track', async () => {
+      let nextTrack = await page.evaluate(record => {
+        record.nextTrack();
+        record.nextTrack();
+        return record.nextTrack();
+      }, recordHandle);
+
+      expect(nextTrack).to.equal('5');
+
+      nextTrack = await page.evaluate(record => record.nextTrack(), recordHandle);
+      expect(nextTrack).to.equal('0');
     });
   });
 });

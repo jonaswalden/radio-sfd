@@ -29,7 +29,7 @@ customElements.define('vinyl-record', class VinylRecord extends HTMLElement {
       || getTrack(this.currentSideIndex = 0, this.currentTrackIndex);
 
     if (previousSide !== this.currentSideIndex) {
-      await this.flip();
+      // await this.flip();
     }
 
     return track;

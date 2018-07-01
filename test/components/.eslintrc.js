@@ -1,9 +1,8 @@
 module.exports = {
-  env: {
-    browser: true,
-    mocha: true,
-  },
   parserOptions: {
     sourceType: 'module',
+  },
+  env: {
+    mocha: true
   }
 };
