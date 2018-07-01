@@ -1,6 +1,6 @@
 'use strict';
 
-const server = require('../../app');
+const app = require('../../app');
 const puppeteer = require('puppeteer');
 const router = require('koa-route');
 
@@ -9,13 +9,11 @@ const Browser = puppeteer.launch({executablePath, headless: true});
 
 const resources = [];
 
-server.app.use(router.get('/resource/:id', (ctx, id) => {
+app.use(router.get('/resource/:id', (ctx, id) => {
   const resource = resources[Number(id)];
   if (!resource) return ctx.throw('no such thing', 404)
   ctx.body = resource;
 }));
-
-server.start();
 
 module.exports = {
   navigateTo,
@@ -26,7 +24,7 @@ module.exports = {
   async close () {
     const browser = await Browser;
     await browser.close();
-    return new Promise(resolve => server.stop(resolve));
+    return new Promise(resolve => app.stop(resolve));
   },
 };
 

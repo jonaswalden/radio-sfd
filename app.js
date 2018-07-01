@@ -6,13 +6,7 @@ const serve = require('koa-static');
 const app = new Koa();
 app.use(serve('.'));
 
-let server;
-module.exports = {
-  app,
-  start () {
-    server = app.listen(4000);
-  },
-  stop (callback) {
-    server.close(callback);
-  },
-};
+const server = app.listen(4000);
+
+module.exports = app;
+module.exports.stop = callback => server.close(callback);
