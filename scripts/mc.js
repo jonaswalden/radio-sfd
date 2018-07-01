@@ -1,23 +1,23 @@
-import setAudioSource from "./setAudioSource";
+import setAudioSource from './setAudioSource';
 
 export default async function mc (schedule, messages, musicPlayer) {
-  const audio = document.getElementById("alert-player__audio");
-  const [text] = document.getElementsByClassName("alert-player__text");
-  const [repeatButton] = document.getElementsByClassName("alert-player__repeat-button");
+  const audio = document.getElementById('alert-player__audio');
+  const [text] = document.getElementsByClassName('alert-player__text');
+  const [repeatButton] = document.getElementsByClassName('alert-player__repeat-button');
   const date = new Date();
   const thisMonth = [date.getFullYear(), date.getMonth()];
   const today = [...thisMonth, date.getDate()];
   const tomorrow = [...thisMonth, today[2] + 1];
-  const vignetteAudio = "audio/messages/vignette.ogg";
+  const vignetteAudio = 'audio/messages/vignette.ogg';
 
-  repeatButton.addEventListener("click", repeatLast);
-  window.addEventListener("keyup", keyboardRepeatLast);
+  repeatButton.addEventListener('click', repeatLast);
+  window.addEventListener('keyup', keyboardRepeatLast);
 
   queueNext();
 
   function queueNext () {
     const upcoming = getUpcoming();
-    const moment = upcoming.queue.split(":");
+    const moment = upcoming.queue.split(':');
     const now = Date.now();
     let timeout = new Date(...today, ...moment).getTime() - now;
 
@@ -41,7 +41,7 @@ export default async function mc (schedule, messages, musicPlayer) {
   }
 
   function keyboardRepeatLast (event) {
-    if (event.key === "backspace") repeatLast();
+    if (event.key === 'backspace') repeatLast();
   }
 
   async function play (messageKey) {
@@ -60,10 +60,10 @@ export default async function mc (schedule, messages, musicPlayer) {
     function playVignette () {
       setAudioSource(audio, vignetteAudio);
       audio.play();
-      text.textContent = "...";
+      text.textContent = '...';
 
       return new Promise(resolve => {
-        audio.addEventListener("ended", resolve, {once: true});
+        audio.addEventListener('ended', resolve, {once: true});
       });
     }
 
@@ -73,21 +73,21 @@ export default async function mc (schedule, messages, musicPlayer) {
       text.innerHTML = message.text;
 
       return new Promise(resolve => {
-        audio.addEventListener("ended", resolve, {once: true});
+        audio.addEventListener('ended', resolve, {once: true});
       });
     }
   }
 
   function getUpcoming () {
-     if (!schedule.upcoming.length) {
-       schedule.upcoming = schedule.passed;
-       schedule.passed = [];
-     }
+    if (!schedule.upcoming.length) {
+      schedule.upcoming = schedule.passed;
+      schedule.passed = [];
+    }
 
-     return schedule.upcoming[0];
+    return schedule.upcoming[0];
   }
 
   function toggleAlertState (on) {
-    document.documentElement.classList.toggle("state-alert", on);
+    document.documentElement.classList.toggle('state-alert', on);
   }
 }
