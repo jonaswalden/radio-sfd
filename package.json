@@ -10,7 +10,7 @@
   "scripts": {
     "start": "node app.js",
     "build": "webpack",
-    "test": "set PORT=4000 && mocha"
+    "test": "mocha"
   },
   "author": "",
   "license": "ISC",
