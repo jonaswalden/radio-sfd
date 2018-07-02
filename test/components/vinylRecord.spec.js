@@ -1,10 +1,11 @@
 'use strict';
 
 const {expect} = require('chai');
-const {addResource, navigateTo, close} = require('./browser');
+const resources = require('../helpers/resources');
+const {navigateTo} = require('../helpers/browser');
 
 describe('<vinyl-record/>', () => {
-  const resourceUrl = addResource(`
+  const resourceUrl = resources.add(`
     <link rel="import" href="/components/vinylRecord/vinylRecord.html">
 
     <vinyl-record>
@@ -25,8 +26,6 @@ describe('<vinyl-record/>', () => {
       console.log("'ello poppet!");
     </script>
   `);
-
-  after(close);
 
   it('component is set up', async () => {
     const page = await navigateTo(resourceUrl);
