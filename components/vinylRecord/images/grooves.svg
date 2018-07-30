@@ -1,10 +1,10 @@
 <svg id="glare" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="5780px" height="5780px" viewBox="0 0 578 578">
 	<style>
 		.light { display: none }
-		.grooves { stroke: #000; opacity: 0.2 }
+		.grooves { stroke: #000; opacity: 0.1 }
 		.grooves :nth-child(24) { display: none }
 		#glare:target .light { display: initial; fill: #fff; opacity: 0.05  }
-		#glare:target .grooves { opacity: 0.35 }
+		#glare:target .grooves { opacity: 0.25 }
 	</style>
 	<circle class="light" r="289" cx="289" cy="289" />
 	<g class="grooves" fill="none" stroke-width="0.4">
