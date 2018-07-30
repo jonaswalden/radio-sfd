@@ -12,7 +12,6 @@ customElements.define('vinyl-record', class VinylRecord extends HTMLElement {
 
   connectedCallback () {
     this.tracks = toTrackList(this.querySelectorAll('[slot]'));
-    this.addEventListener('click', () => this.nextTrack());
   }
 
   get currentTrack () {

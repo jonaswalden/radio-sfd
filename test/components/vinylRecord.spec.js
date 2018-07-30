@@ -42,6 +42,27 @@ describe('<vinyl-record/>', () => {
     await recordHandle.dispose();
   });
 
+  describe('.tracks', () => {
+    let page, recordHandle;
+    before(async () => {
+      page = await navigateTo(resourceUrl);
+      recordHandle = await page.$('vinyl-record');
+    });
+
+    after(async () => {
+      await recordHandle.dispose();
+    });
+
+    it('is an array of sides containing sources of tracks', async () => {
+      const tracks = await page.evaluate(record => record.tracks, recordHandle);
+      expect(tracks).to.have.length(3);
+      const [sideA, sideB, sideC] = tracks;
+      expect(sideA).to.have.ordered.members(['0', '1']);
+      expect(sideB).to.have.ordered.members(['2']);
+      expect(sideC).to.have.ordered.members(['3', '4', '5']);
+    });
+  });
+
   describe('.currentTrack', () => {
     let page, recordHandle;
     before(async () => {
