@@ -1,12 +1,12 @@
-import csvToArray from "./csvToArray";
+import csvToArray from './csvToArray';
 
 export default function getSchedule (url) {
-  if (window.location.hash === "#dev") {
+  if (window.location.hash === '#dev') {
     return Promise.resolve(window.devSchedule)
       .then(sortSchedule);
   }
 
-  return window.fetch(url, {mode: "cors"})
+  return window.fetch(url, {mode: 'cors'})
     .then(data => data.text())
     .then(csvToArray)
     .then(toItemList)
@@ -27,7 +27,7 @@ export default function getSchedule (url) {
 
   function removeEmpty (objList) {
     return objList.filter(obj => {
-      return !Object.values(obj).includes("");
+      return !Object.values(obj).includes('');
     });
   }
 
@@ -56,7 +56,7 @@ export default function getSchedule (url) {
     }
 
     function timeSize (timeString) {
-      const moment = timeString.split(":");
+      const moment = timeString.split(':');
       return new Date(...today, ...moment).getTime();
     }
   }
