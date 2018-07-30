@@ -1,12 +1,10 @@
-
 customElements.define('record-player', class RecordPlayer extends HTMLElement {
   constructor () {
     super();
-    const doc = document.currentScript.ownerDocument;
-    const template = doc.querySelector('template');
+    const template = window.appTemplates.recordPlayer;
 
-    const shadow = this.attachShadow({mode: 'open'});
-    shadow.appendChild(template.content.cloneNode(true));
+    const shadowRoot = this.attachShadow({mode: 'open'});
+    shadowRoot.appendChild(template.content.cloneNode(true));
 
     Object.assign(this, _RecordPlayer(this));
   }

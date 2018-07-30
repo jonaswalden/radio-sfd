@@ -89,4 +89,10 @@
   </svg>
 </template>
 
-<script src="./vinylRecord.js"></script>
+<script>
+  ((localDocument) => {
+    window.appTemplates = window.appTemplates || {};
+    window.appTemplates.vinylRecord = localDocument.querySelector('template');
+  })(document.currentScript.ownerDocument);
+</script>
+<script src="./vinylRecord.js" type="module"></script>

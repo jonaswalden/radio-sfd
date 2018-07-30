@@ -1,12 +1,10 @@
-const componentDocument = document.currentScript.ownerDocument;
-
 customElements.define('vinyl-record', class VinylRecord extends HTMLElement {
   constructor () {
     super();
-    const template = componentDocument.querySelector('template');
+    const template = window.appTemplates.vinylRecord;
 
-    this.attachShadow({mode: 'open'})
-      .appendChild(componentDocument.importNode(template.content, true));
+    const shadowRoot = this.attachShadow({mode: 'open'});
+    shadowRoot.appendChild(template.content.cloneNode(true));
 
     this.currentTrackIndex = 0;
     this.currentSideIndex = 0;
@@ -22,15 +20,15 @@ customElements.define('vinyl-record', class VinylRecord extends HTMLElement {
   }
 
   async nextTrack () {
-    const previousSide = this.currentSideIndex;
+    // const previousSide = this.currentSideIndex;
     const {tracks} = this;
     const track = getTrack(this.currentSideIndex, ++this.currentTrackIndex)
       || getTrack(++this.currentSideIndex, this.currentTrackIndex = 0)
       || getTrack(this.currentSideIndex = 0, this.currentTrackIndex);
 
-    if (previousSide !== this.currentSideIndex) {
-      // await this.flip();
-    }
+    // if (previousSide !== this.currentSideIndex) {
+    //   await this.flip();
+    // }
 
     return track;
 

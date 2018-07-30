@@ -12,4 +12,10 @@
   <slot name="record"></slot>
 </template>
 
-<script src="./recordPlayer.js"></script>
+<script>
+  ((localDocument) => {
+    window.appTemplates = window.appTemplates || {};
+    window.appTemplates.vinylRecord = localDocument.querySelector('template');
+  })(document.currentScript.ownerDocument);
+</script>
+<script src="./recordPlayer.js" type="module"></script>
