@@ -4,11 +4,11 @@ const {expect} = require('chai');
 const resources = require('../helpers/resources');
 const {navigateTo} = require('../helpers/browser');
 
-describe('<vinyl-record/>', () => {
+describe('<rsfd-record/>', () => {
   const resourceUrl = resources.add(`
-    <link rel="import" href="/components/vinylRecord/vinylRecord.html">
+    <link rel="import" href="/components/record/record.html">
 
-    <vinyl-record>
+    <rsfd-record>
       <ul slot="side-a">
         <li data-src="0">
         <li data-src="1">
@@ -21,7 +21,7 @@ describe('<vinyl-record/>', () => {
         <li data-src="4">
         <li data-src="5">
       </ul>
-    </vinyl-string>
+    </rsfd-record>
     <script>
       console.log("'ello poppet!");
     </script>
@@ -30,11 +30,11 @@ describe('<vinyl-record/>', () => {
   it('component is set up', async () => {
     const page = await navigateTo(resourceUrl);
 
-    const recordHandle = await page.$('vinyl-record');
+    const recordHandle = await page.$('rsfd-record');
     expect(recordHandle).to.be.ok;
 
     const tagName = await page.evaluate(record => record.tagName, recordHandle);
-    expect(tagName).to.equal('VINYL-RECORD');
+    expect(tagName).to.equal('RSFD-RECORD');
 
     const customProp = await page.evaluate(record => record.currentTrackIndex, recordHandle);
     expect(customProp).to.not.be.undefined;
@@ -46,7 +46,7 @@ describe('<vinyl-record/>', () => {
     let page, recordHandle;
     before(async () => {
       page = await navigateTo(resourceUrl);
-      recordHandle = await page.$('vinyl-record');
+      recordHandle = await page.$('rsfd-record');
     });
 
     after(async () => {
@@ -67,7 +67,7 @@ describe('<vinyl-record/>', () => {
     let page, recordHandle;
     before(async () => {
       page = await navigateTo(resourceUrl);
-      recordHandle = await page.$('vinyl-record');
+      recordHandle = await page.$('rsfd-record');
     });
 
     after(async () => {
@@ -84,7 +84,7 @@ describe('<vinyl-record/>', () => {
     let page, recordHandle;
     before(async () => {
       page = await navigateTo(resourceUrl);
-      recordHandle = await page.$('vinyl-record');
+      recordHandle = await page.$('rsfd-record');
     });
 
     it('gets next track and sets it to .currentTrack', async () => {

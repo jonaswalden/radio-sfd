@@ -1,4 +1,4 @@
-customElements.define('hard-range-end', class HardRangeEnd extends HTMLAudioElement {
+customElements.define('rsfd-hard-range-end', class HardRangeEnd extends HTMLAudioElement {
   static get observedAttributes () {
     return ['src'];
   }

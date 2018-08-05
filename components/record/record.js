@@ -1,7 +1,7 @@
-customElements.define('vinyl-record', class VinylRecord extends HTMLElement {
+customElements.define('rsfd-record', class Record extends HTMLElement {
   constructor () {
     super();
-    const template = window.appTemplates.vinylRecord;
+    const template = window.appTemplates.record;
 
     const shadowRoot = this.attachShadow({mode: 'open'});
     shadowRoot.appendChild(template.content.cloneNode(true));

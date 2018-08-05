@@ -1,4 +1,4 @@
-customElements.define('record-player', class RecordPlayer extends HTMLElement {
+customElements.define('rsfd-record-player', class RecordPlayer extends HTMLElement {
   constructor () {
     super();
     const template = window.appTemplates.recordPlayer;
@@ -10,7 +10,7 @@ customElements.define('record-player', class RecordPlayer extends HTMLElement {
   }
 
   connectedCallback () {
-    this.record = this.querySelector('vinyl-record');
+    this.record = this.querySelector('rsfd-record');
     // this.start();
   }
 });
