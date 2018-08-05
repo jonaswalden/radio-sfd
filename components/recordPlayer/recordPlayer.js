@@ -45,7 +45,7 @@ function _RecordPlayer (element) {
       disabled = false;
       if (!wasPlayingWhenPaused) return;
       audio.play();
-    }
+    },
   };
 
   function play (track) {
