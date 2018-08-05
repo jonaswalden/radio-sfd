@@ -36,24 +36,24 @@ customElements.define('vinyl-record', class VinylRecord extends HTMLElement {
     }
   }
 
-  async flip () {
-    let element = this;
-    const nextSideRotation = 0;
-
-    let transition = Transition('ease-in');
-    this.style.transform = `rotateX(${nextSideRotation - 90}deg)`;
-    await transition;
-    this.style.filter = `hue-rotate(${this.currentSideIndex * 90}deg)`;
-    this.style.transform = `rotateX(${nextSideRotation + 90}deg)`;
-    transition = Transition('ease-out');
-    this.style.transform = `rotateX(${nextSideRotation}deg)`;
-    await transition;
-
-    function Transition (easing) {
-      element.style.transition = `transform 0.5s ${easing}`;
-      return new Promise(resolve => element.addEventListener('transitionend', resolve, {once: true}));
-    }
-  }
+  // async flip () {
+  //   let element = this;
+  //   const nextSideRotation = 0;
+  //
+  //   let transition = Transition('ease-in');
+  //   this.style.transform = `rotateX(${nextSideRotation - 90}deg)`;
+  //   await transition;
+  //   this.style.filter = `hue-rotate(${this.currentSideIndex * 90}deg)`;
+  //   this.style.transform = `rotateX(${nextSideRotation + 90}deg)`;
+  //   transition = Transition('ease-out');
+  //   this.style.transform = `rotateX(${nextSideRotation}deg)`;
+  //   await transition;
+  //
+  //   function Transition (easing) {
+  //     element.style.transition = `transform 0.5s ${easing}`;
+  //     return new Promise(resolve => element.addEventListener('transitionend', resolve, {once: true}));
+  //   }
+  // }
 });
 
 function toTrackList (slots) {
