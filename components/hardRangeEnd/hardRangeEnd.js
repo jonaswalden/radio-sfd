@@ -1,4 +1,4 @@
-class HardRangeEnd extends HTMLAudioElement {
+customElements.define('hard-range-end', class HardRangeEnd extends HTMLAudioElement {
   static get observedAttributes () {
     return ['src'];
   }
@@ -37,6 +37,4 @@ class HardRangeEnd extends HTMLAudioElement {
 
     return Number(rangeEnd);
   }
-}
-
-customElements.define('hard-range-end', HardRangeEnd, { extends: 'audio' });
+}, { extends: 'audio' });
