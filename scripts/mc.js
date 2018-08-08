@@ -1,13 +1,10 @@
 import setAudioSource from "./setAudioSource.js";
+import {today, tomorrow, moment} from "./time.js"
 
 export default async function mc (schedule, messages, musicPlayer) {
   const audio = document.getElementById("alert-player__audio");
   const [text] = document.getElementsByClassName("alert-player__text");
   const [repeatButton] = document.getElementsByClassName("alert-player__repeat-button");
-  const date = new Date();
-  const thisMonth = [date.getFullYear(), date.getMonth()];
-  const today = [...thisMonth, date.getDate()];
-  const tomorrow = [...thisMonth, today[2] + 1];
   const vignetteAudio = "audio/messages/vignette.ogg";
 
   repeatButton.addEventListener("click", repeatLast);
@@ -17,12 +14,11 @@ export default async function mc (schedule, messages, musicPlayer) {
 
   function queueNext () {
     const upcoming = getUpcoming();
-    const moment = upcoming.queue.split(":");
     const now = Date.now();
-    let timeout = new Date(...today, ...moment).getTime() - now;
+    let timeout = moment(today, upcoming.queue) - now;
 
     if (timeout < 0) {
-      timeout = new Date(...tomorrow, ...moment).getTime() - now;
+      timeout = moment(tomorrow, upcoming.queue) - now;
     }
 
     window.setTimeout(playNext, timeout);
