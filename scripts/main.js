@@ -1,7 +1,7 @@
-import mc from "./mc";
-import MusicPlayer from "./MusicPlayer";
-import Playlist from "./Playlist";
-import getSchedule from "./getSchedule";
+import mc from "./mc.js";
+import MusicPlayer from "./MusicPlayer.js";
+import Playlist from "./Playlist.js";
+import getSchedule from "./getSchedule.js";
 
 const playlist = Playlist(window.tracks);
 const musicPlayer = MusicPlayer(playlist);

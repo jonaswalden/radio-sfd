@@ -1,4 +1,4 @@
-import csvToArray from "./csvToArray";
+import csvToArray from "./csvToArray.js";
 
 export default function getSchedule (url) {
   if (window.location.hash === "#dev") {

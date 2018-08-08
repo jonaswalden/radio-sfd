@@ -1,4 +1,4 @@
-import setAudioSource from "./setAudioSource";
+import setAudioSource from "./setAudioSource.js";
 
 export default async function mc (schedule, messages, musicPlayer) {
   const audio = document.getElementById("alert-player__audio");

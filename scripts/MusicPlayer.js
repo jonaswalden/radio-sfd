@@ -1,4 +1,4 @@
-import setAudioSource from "./setAudioSource";
+import setAudioSource from "./setAudioSource.js";
 
 export default function MusicPlayer (playlist) {
   const audio = document.getElementById("music-player");
