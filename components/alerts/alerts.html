@@ -1,0 +1,14 @@
+<link rel="import" href="../message/message.html">
+
+<template>
+  <rsfd-message id="vignette-message" src="/audio/messages/vignette.ogg">...</rsfd-message>
+  <ol id="messages"></ol>
+</template>
+
+<script>
+  ((localDocument) => {
+    window.appTemplates = window.appTemplates || {};
+    window.appTemplates.alerts = localDocument.querySelector('template');
+  })(document.currentScript.ownerDocument);
+</script>
+<script src="./alerts.js" type="module"></script>

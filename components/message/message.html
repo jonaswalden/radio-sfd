@@ -1,0 +1,28 @@
+<link rel="import" href="../hardRangeEnd/hardRangeEnd.html">
+
+<template>
+  <style>
+    :host::before {
+      content: "”";
+      line-height: 1;
+      font-weight: 900;
+      font-size: 2em;
+      font-style: normal;
+      color: hsl(356, 81%, 52%);
+      position: absolute;
+      left: 0;
+      top: -0.1em;
+      margin-right: 10px;
+    }
+  </style>
+  <audio is="rsfd-hard-range-end"></audio>
+  <slot></slot>
+</template>
+
+<script>
+  ((localDocument) => {
+    window.appTemplates = window.appTemplates || {};
+    window.appTemplates.message = localDocument.querySelector('template');
+  })(document.currentScript.ownerDocument);
+</script>
+<script src="./message.js" type="module"></script>

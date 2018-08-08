@@ -1,0 +1,13 @@
+<template>
+  <button>Play</button>
+  <button>Pause</button>
+  <button>Replay</button>
+</template>
+
+<script>
+  ((localDocument) => {
+    window.appTemplates = window.appTemplates || {};
+    window.appTemplates.controls = localDocument.querySelector('template');
+  })(document.currentScript.ownerDocument);
+</script>
+<script src="./controls.js" type="module"></script>
