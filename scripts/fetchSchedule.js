@@ -1,31 +1,13 @@
 import csvToArray from "./csvToArray.js";
 import {today, moment} from "./time.js";
 
-export default function getSchedule (url) {
-  if (window.location.hash === "#dev") {
-    return Promise.resolve(window.devSchedule)
-      .then(groupByTense);
-  }
-
+export default function fetchSchedule (url) {
   return window.fetch(url, {mode: "cors"})
     .then(data => data.text())
     .then(csvToArray)
-    .then(toItemList)
     .then(removeEmpty)
     .then(sortSchedule)
     .then(groupByTense);
-
-  function toItemList (list) {
-    const [keys, ...rows] = list;
-    return rows.map(toObject);
-
-    function toObject (vals) {
-      return keys.reduce((obj, key, index) => {
-        obj[key] = vals[index];
-        return obj;
-      }, {});
-    }
-  }
 
   function removeEmpty (objList) {
     return objList.filter(obj => {

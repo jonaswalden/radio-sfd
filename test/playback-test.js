@@ -4,7 +4,7 @@ const {test} = require("ava");
 const addMediaInterface = require("./helpers/addMediaInterface");
 const addTimeout = require("./helpers/addTimeout");
 const ck = require("chronokinesis");
-const navigateTo = require("./helpers/navigateTo");
+const navigate = require("./helpers/navigate");
 
 test.after(() => {
   delete global.window;
@@ -13,7 +13,7 @@ test.after(() => {
 
 let browser, music, alert, timeouts;
 test.serial("loads document", async t => {
-  browser = await navigateTo("./index.html");
+  browser = await navigate("./index.html");
   music = browser.document.getElementById("music-player");
   t.truthy(music, "no music audio");
   addMediaInterface(music);

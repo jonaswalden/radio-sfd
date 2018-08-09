@@ -1,12 +1,27 @@
+export default function csvToArray (csvString) {
+  return toObjectList(parseCSV(csvString));
+}
+
+function toObjectList (list) {
+  const [keys, ...rows] = list;
+  return rows.map(toObject);
+
+  function toObject (vals) {
+    return keys.reduce((obj, key, index) => {
+      obj[key] = vals[index];
+      return obj;
+    }, {});
+  }
+}
 
 /**
- * CSVToArray parses any String of Data including '\r' '\n' characters,
+ * CSVToArray (parseCSV) parses any String of Data including '\r' '\n' characters,
  * and returns an array with the rows of data.
  * @param {String} CSV_string - the CSV string you need to parse
  * @param {String} delimiter - the delimeter used to separate fields of data
  * @returns {Array} rows - rows of CSV where first row are column headers
  */
-export default function csvToArray (CSV_string, delimiter) {
+function parseCSV (CSV_string, delimiter) {
    delimiter = (delimiter || ","); // user-supplied delimeter or default comma
 
    var pattern = new RegExp( // regular expression to parse the CSV values.
