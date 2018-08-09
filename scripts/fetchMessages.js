@@ -1,7 +1,7 @@
-import csvToArray from "./csvToArray.js";
+import csvToArray from './csvToArray.js';
 
 export default function fetchMessages (url) {
-  return window.fetch(url, {mode: "cors"})
+  return window.fetch(url, {mode: 'cors'})
     .then(data => data.text())
     .then(csvToArray)
     .then(toObject);

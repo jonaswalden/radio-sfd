@@ -14,6 +14,7 @@ function toObjectList (list) {
   }
 }
 
+/* eslint-disable */
 /**
  * CSVToArray (parseCSV) parses any String of Data including '\r' '\n' characters,
  * and returns an array with the rows of data.

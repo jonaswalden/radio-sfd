@@ -1,8 +1,8 @@
-"use strict";
+'use strict';
 
-const fs = require("fs");
-const Tallahassee = require("@expressen/tallahassee");
-const {Compiler} = require("@expressen/tallahassee/lib/Compiler");
+const fs = require('fs');
+const Tallahassee = require('@expressen/tallahassee');
+const {Compiler} = require('@expressen/tallahassee/lib/Compiler');
 
 module.exports = {
   toFile,
@@ -10,10 +10,10 @@ module.exports = {
 };
 
 function toFile (filepath) {
-  if (!filepath) return Promise.reject("no file path");
+  if (!filepath) return Promise.reject('no file path');
 
   return new Promise((resolve, reject) => {
-    fs.readFile(filepath, "utf-8", (err, data) => {
+    fs.readFile(filepath, 'utf-8', (err, data) => {
       if (err) return reject(err);
 
       try {
@@ -27,7 +27,7 @@ function toFile (filepath) {
 }
 
 function toDomString (domString) {
-  if (!domString) return Promise.reject("no dom string");
+  if (!domString) return Promise.reject('no dom string');
 
   return new Promise((resolve, reject) => {
     try {

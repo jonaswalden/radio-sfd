@@ -1,14 +1,14 @@
-import setAudioSource from "./setAudioSource.js";
-import {today, tomorrow, moment} from "./time.js"
+import setAudioSource from './setAudioSource.js';
+import {today, tomorrow, moment} from './time.js'
 
 export default async function mc (schedule, messages, musicPlayer) {
-  const audio = document.getElementById("alert-player__audio");
-  const [text] = document.getElementsByClassName("alert-player__text");
-  const [repeatButton] = document.getElementsByClassName("alert-player__repeat-button");
-  const vignetteAudio = "audio/messages/vignette.ogg";
+  const audio = document.getElementById('alert-player__audio');
+  const [text] = document.getElementsByClassName('alert-player__text');
+  //const [repeatButton] = document.getElementsByClassName('alert-player__repeat-button');
+  const vignetteAudio = 'audio/messages/vignette.ogg';
 
-  repeatButton.addEventListener("click", repeatLast);
-  window.addEventListener("keyup", keyboardRepeatLast);
+  //repeatButton.addEventListener('click', repeatLast);
+  //window.addEventListener('keyup', keyboardRepeatLast);
 
   queueNext();
 
@@ -37,7 +37,7 @@ export default async function mc (schedule, messages, musicPlayer) {
   }
 
   function keyboardRepeatLast (event) {
-    if (event.key === "backspace") repeatLast();
+    if (event.key === 'backspace') repeatLast();
   }
 
   async function play (messageKey) {
@@ -56,10 +56,10 @@ export default async function mc (schedule, messages, musicPlayer) {
     function playVignette () {
       setAudioSource(audio, vignetteAudio);
       audio.play();
-      text.textContent = "...";
+      text.textContent = '...';
 
       return new Promise(resolve => {
-        audio.addEventListener("ended", resolve, {once: true});
+        audio.addEventListener('ended', resolve, {once: true});
       });
     }
 
@@ -69,21 +69,21 @@ export default async function mc (schedule, messages, musicPlayer) {
       text.innerHTML = message.text;
 
       return new Promise(resolve => {
-        audio.addEventListener("ended", resolve, {once: true});
+        audio.addEventListener('ended', resolve, {once: true});
       });
     }
   }
 
   function getUpcoming () {
-     if (!schedule.upcoming.length) {
-       schedule.upcoming = schedule.passed;
-       schedule.passed = [];
-     }
+    if (!schedule.upcoming.length) {
+      schedule.upcoming = schedule.passed;
+      schedule.passed = [];
+    }
 
-     return schedule.upcoming[0];
+    return schedule.upcoming[0];
   }
 
   function toggleAlertState (on) {
-    document.documentElement.classList.toggle("state-alert", on);
+    document.documentElement.classList.toggle('state-alert', on);
   }
 }

@@ -1,8 +1,8 @@
-import csvToArray from "./csvToArray.js";
-import {today, moment} from "./time.js";
+import csvToArray from './csvToArray.js';
+import {today, moment} from './time.js';
 
 export default function fetchSchedule (url) {
-  return window.fetch(url, {mode: "cors"})
+  return window.fetch(url, {mode: 'cors'})
     .then(data => data.text())
     .then(csvToArray)
     .then(removeEmpty)
@@ -11,7 +11,7 @@ export default function fetchSchedule (url) {
 
   function removeEmpty (objList) {
     return objList.filter(obj => {
-      return !Object.values(obj).includes("");
+      return !Object.values(obj).includes('');
     });
   }
 
