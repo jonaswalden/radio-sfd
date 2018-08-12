@@ -16,10 +16,10 @@ export default function MusicPlayer (playlist) {
   audio.volume = 0.4;
 
   return {
-    audio,
     start () {
       playNext();
       audio.addEventListener('ended', playNext);
+      playlist.initCache(audio);
     },
     pause () {
       disabled = true;

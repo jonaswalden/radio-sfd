@@ -7,7 +7,6 @@ import Playlist from './Playlist.js';
 const playlist = Playlist(window.tracks);
 const musicPlayer = MusicPlayer(playlist);
 musicPlayer.start();
-playlist.initCache(musicPlayer.audio);
 
 Promise.all([
   fetchSchedule(window.scheduleUrl),
