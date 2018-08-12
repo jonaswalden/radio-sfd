@@ -1,16 +1,15 @@
 import setAudioSource from './setAudioSource.js';
 import {today, tomorrow, moment} from './time.js'
 
-export default function mc (schedule, messages, musicPlayer) {
+export default function MC (schedule, messages, musicPlayer) {
   const audio = document.getElementById('alert-player');
   const [text] = document.getElementsByClassName('alert-player__text');
-  //const [repeatButton] = document.getElementsByClassName('alert-player__repeat-button');
   const vignetteAudio = 'audio/messages/vignette.ogg';
 
-  //repeatButton.addEventListener('click', repeatLast);
-  //window.addEventListener('keyup', keyboardRepeatLast);
-
-  queueNext();
+  return {
+    start: queueNext,
+    repeatLast,
+  }
 
   function queueNext () {
     const upcoming = getUpcoming();
@@ -34,10 +33,6 @@ export default function mc (schedule, messages, musicPlayer) {
     if (!last) return;
 
     play(last.message);
-  }
-
-  function keyboardRepeatLast (event) {
-    if (event.key === 'backspace') repeatLast();
   }
 
   async function play (messageKey) {

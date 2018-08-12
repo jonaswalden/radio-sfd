@@ -1,17 +1,23 @@
+import controls from './controls.js';
 import fetchMessages from './fetchMessages.js';
 import fetchSchedule from './fetchSchedule.js';
-import mc from './mc.js';
+import MC from './MC.js';
 import MusicPlayer from './MusicPlayer.js';
 import Playlist from './Playlist.js';
 
-const playlist = Playlist(window.tracks);
-const musicPlayer = MusicPlayer(playlist);
-musicPlayer.start();
+start();
 
-Promise.all([
-  fetchSchedule(window.scheduleUrl),
-  fetchMessages(window.messagesUrl),
-])
-  .then(([schedule, messages]) => {
-    mc(schedule, messages, musicPlayer);
-  });
+async function start () {
+  const playlist = Playlist(window.tracks);
+  const musicPlayer = MusicPlayer(playlist);
+  musicPlayer.start();
+
+  const [schedule, messages] = await Promise.all([
+    fetchSchedule(window.scheduleUrl),
+    fetchMessages(window.messagesUrl),
+  ]);
+
+  const mc = MC(schedule, messages, musicPlayer);
+  mc.start();
+  controls(musicPlayer, mc);
+}
