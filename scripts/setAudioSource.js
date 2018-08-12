@@ -1,7 +1,6 @@
 export default function setAudioSource (audio, src) {
   const [, search] = src.split('#');
   audio.src = src;
-
   if (!search) return;
 
   const [, playbackStop] = search.split(',');

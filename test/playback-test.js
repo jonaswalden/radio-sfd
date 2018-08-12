@@ -3,15 +3,15 @@
 const {Storage} = require('@expressen/tallahassee/lib');
 const {test} = require('ava');
 const addMediaInterface = require('./helpers/addMediaInterface');
-const addTimeout = require('./helpers/addTimeout');
+const addTimeoutInterface = require('./helpers/addTimeoutInterface');
 const ck = require('chronokinesis');
 const navigate = require('./helpers/navigate');
 const nock = require('nock');
 
-test.after(() => {
-  delete global.window;
-  ck.reset();
-});
+// test.after(() => {
+//   delete global.window;
+//   ck.reset();
+// });
 
 let browser, music, alert, timeouts;
 test.serial('loads document', async t => {
@@ -25,7 +25,7 @@ test.serial('loads document', async t => {
   t.truthy(alert, 'no alert audio');
   addMediaInterface(alert);
 
-  addTimeout(browser.window, timeouts = []);
+  timeouts = addTimeoutInterface(browser.window);
   browser.window.localStorage = new Storage();
 });
 
@@ -78,48 +78,77 @@ test.serial('playback has started', t => {
   t.is(music._playing, true, 'music not playing');
 });
 
-test.serial.skip('tracks are played in a loop', t => {
-  music.dispatchEvent('ended');
+test.serial('tracks are played in a loop', t => {
+  music.dispatchEvent(new browser.window.Event('ended'));
 
   t.is(music.src, '/local/track-b.mp3', 'unexpected music src');
   t.is(music._playing, true, 'music not playing');
 
-  music.dispatchEvent('ended');
-
-  t.is(music.src, '/local/track-c.mp3', 'unexpected music src');
-  t.is(music._playing, true, 'music not playing');
-
-  music.dispatchEvent('ended');
+  music.dispatchEvent(new browser.window.Event('ended'));
 
   t.is(music.src, '/local/track-a.mp3', 'unexpected music src');
   t.is(music._playing, true, 'music not playing');
 });
 
-test.serial.skip('the key track 2 is queued in 60 minutes' , t => {
+test.serial('schedule and messages have been fetched', async t => {
+  t.plan(0);
+  await Promise.all(browser.window.fetch._pendingRequests);
+  await new Promise(resolve => setTimeout(resolve, 10));
+});
+
+test.serial('message A is queued for 10:00' , t => {
   t.is(timeouts.length, 1, 'unexpected amount of timeouts');
 
-  const [, timeout] = timeouts[0];
-  t.is(timeout, 60 * 60 * 1000, 'unexpected timeout');
+  const [, delay] = timeouts[0];
+  t.is(delay, 60 * 60 * 1000, 'unexpected delay');
 });
 
-test.serial.skip('track 1 is still playing', t => {
+test.serial('track A is still playing', t => {
   t.is(music.src, '/local/track-a.mp3', 'unexpected music src');
   t.is(music._playing, true, 'music not playing');
 });
 
-test.serial.skip('key track 2 is a go', t => {
-  const [playNextTrack] = timeouts[0];
+test.serial('the clock strikes 10:00', t => {
+  t.plan(0);
+  ck.freeze('2012-04-02 10:00');
+  const [playNextTrack] = timeouts.pop();
   playNextTrack();
+});
+
+test.serial('music is paused', t => {
+  t.is(music._playing, false, 'music still playing');
+});
+
+let alertText;
+test.serial('message vignette is playing', t => {
+  t.is(alert.src, 'audio/messages/vignette.ogg', 'not vignette audio source');
+  t.is(alert._playing, true, 'vignette not playing');
+
+  [alertText] = browser.document.getElementsByClassName('alert-player__text');
+  t.is(alertText.textContent, '...', 'unexpected alert text');
+});
+
+test.serial('then message A is a go', async t => {
+  alert.dispatchEvent(new browser.window.Event('ended'));
+  await new Promise(resolve => setTimeout(resolve));
 
   t.is(music._playing, false, 'music still playing');
 
-  t.is(alert.src, 'Y', 'unexpected alert.src');
-  t.is(alert._playing, true, 'alert not playing');
+  t.is(alert.src, 'http://cdn.radio-sfd/msg-a-audio.mp3', 'not message audio source');
+  t.is(alert._playing, true, 'message not playing');
+  t.is(alertText.textContent, 'First message A', 'unexpected alert text');
 });
 
-test.serial.skip('afterwards playback continues with track 1', t => {
-  alert.dispatchEvent('ended');
+test.serial('then message A is a go', async t => {
+  alert.dispatchEvent(new browser.window.Event('ended'));
+  await new Promise(resolve => setTimeout(resolve));
 
+  t.is(timeouts.length, 1, 'unexpected amount of timeouts');
+  const [postMessagePause] = timeouts.pop();
+  postMessagePause();
+});
+
+test.serial('then music continues', async t => {
   t.is(music.src, '/local/track-a.mp3');
   t.is(music._playing, true, 'music not playing');
 

@@ -1,8 +1,8 @@
 import setAudioSource from './setAudioSource.js';
 import {today, tomorrow, moment} from './time.js'
 
-export default async function mc (schedule, messages, musicPlayer) {
-  const audio = document.getElementById('alert-player__audio');
+export default function mc (schedule, messages, musicPlayer) {
+  const audio = document.getElementById('alert-player');
   const [text] = document.getElementsByClassName('alert-player__text');
   //const [repeatButton] = document.getElementsByClassName('alert-player__repeat-button');
   const vignetteAudio = 'audio/messages/vignette.ogg';
