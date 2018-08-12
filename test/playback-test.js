@@ -8,10 +8,10 @@ const ck = require('chronokinesis');
 const navigate = require('./helpers/navigate');
 const nock = require('nock');
 
-// test.after(() => {
-//   delete global.window;
-//   ck.reset();
-// });
+test.after(() => {
+  delete global.window;
+  ck.reset();
+});
 
 let browser, music, alert, timeouts;
 test.serial('loads document', async t => {
