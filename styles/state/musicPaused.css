@@ -1,0 +1,22 @@
+.state-music-paused body {
+  background-image:
+    linear-gradient(
+      rgba(0, 0, 0, 0),
+      rgba(0, 0, 0, 0.06)
+    ),
+    linear-gradient(
+      hsl(219, 0%, 33%) 0%,
+      hsl(219, 0%, 33%) 33%,
+      rgb(214, 214, 213) 66%,
+      rgb(214, 214, 213) 100%
+    );
+}
+
+.state-music-paused .turntable,
+.state-music-paused .controls__repeat-alert {
+  filter: grayscale(100%);
+}
+
+.state-music-paused .controls__pause-music {
+  display: none;
+}

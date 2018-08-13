@@ -1,5 +1,5 @@
 <!doctype html>
-<html>
+<html class="state-music-playing">
   <head>
     <title>Radio SFD</title>
     <meta charset="utf-8">
@@ -12,24 +12,24 @@
 
     <main>
       <div class="controls">
-        <button class="controls__music-pause" type="button">
-          <svg class="icon icon--pause">
+        <button class="controls__pause-music" type="button">
+          <svg class="icon">
             <use xlink:href="#pause"></use>
           </svg>
         </button>
-        <button class="controls__music-play" type="button">
-          <svg class="icon icon--play">
+        <button class="controls__play-music" type="button">
+          <svg class="icon">
             <use xlink:href="#play"></use>
           </svg>
         </button>
-        <button class="controls__alert-repeat" type="button">
-          <svg class="icon icon--replay">
+        <button class="controls__repeat-alert" type="button">
+          <svg class="icon">
             <use xlink:href="#replay"></use>
           </svg>
         </button>
       </div>
 
-      <div class="alert-player__text__wrapper">
+      <div class="alert-player__text-wrapper">
         <blockquote class="alert-player__text"></blockquote>
       </div>
     </main>
@@ -38,11 +38,6 @@
       <div class="record">
         <img class="record__vinyl" src="images/record.svg">
         <img class="record__label" src="images/label.svg">
-        <div class="record__turntable-pin-shadow"></div>
-      </div>
-      <div class="turntable__pin radial-shine">
-        <div class="radial-shine__highlight"></div>
-        <div class="radial-shine__shadow"></div>
       </div>
     </figure>
 

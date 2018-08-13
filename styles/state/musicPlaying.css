@@ -1,0 +1,8 @@
+.state-music-playing .controls__play-music {
+  display: none;
+}
+
+.state-music-playing .record,
+.state-music-playing .record__label {
+  animation-play-state: running;
+}

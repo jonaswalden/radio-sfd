@@ -1,0 +1,13 @@
+.state-alert body {
+  background-position: bottom, top;
+}
+
+.state-alert .controls {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.state-alert .alert-player__text-wrapper {
+  opacity: 1;
+  pointer-events: auto;
+}
