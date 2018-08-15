@@ -42,13 +42,41 @@
     </figure>
 
     <script>
-      const dataBaseUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSOm2jJdkR4kfIm2py2T1-KTu3d5h6naSu8T5L3NcOoxapLkU-BHGZ3uErCgRfl7TL90ttcwm_7VN8n/pub";
-      window.scheduleUrl = `${dataBaseUrl}?output=csv&gid=0`;
-      window.messagesUrl = `${dataBaseUrl}?output=csv&gid=2089493124`;
-      window.tracks = [
-        "audio/music/track-a.mp3#t=3.6,107",
-        "audio/music/track-b.mp3",
-      ];
+      (() => {
+        const dataBaseUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSOm2jJdkR4kfIm2py2T1-KTu3d5h6naSu8T5L3NcOoxapLkU-BHGZ3uErCgRfl7TL90ttcwm_7VN8n/pub";
+        window.scheduleUrl = `${dataBaseUrl}?output=csv&gid=0`;
+        window.messagesUrl = `${dataBaseUrl}?output=csv&gid=2089493124`;
+        window.tracks = [
+          "audio/music/track-a.mp3#t=3.6,107",
+          "audio/music/track-b.mp3",
+        ];
+      })();
+    </script>
+    <script>
+      (() => {
+        if (window.location.hash !== "#dev") return;
+
+        const queue = new Date();
+        const devMessages =
+          'id,audio,text\n' +
+          'msg-a,"audio/music/track-a.mp3#t=3.6,4.6","Va e detta häer nudå?"\n' +
+          'msg-b,"audio/music/track-a.mp3#t=3.6,4.6","E la ente SFD nue?"\n';
+
+        const devSchedule =
+          'queue,message\n' +
+          `${nextQueue()},msg-a\n` +
+          `${nextQueue()},msg-b\n` +
+          `${nextQueue()},msg-a\n` +
+          `${nextQueue()},msg-b\n`;
+
+        window.messagesUrl = 'data:,' + window.encodeURIComponent(devMessages);
+        window.scheduleUrl = 'data:,' + window.encodeURIComponent(devSchedule);
+
+        function nextQueue () {
+          queue.setMinutes(queue.getMinutes() + 1);
+          return queue.getHours() + ':' + queue.getMinutes();
+        }
+      })();
     </script>
 
     <script async type="module" src="/scripts/main.js"></script>
