@@ -6,7 +6,7 @@ body {
   min-height: 100%;
   margin: 0;
   overflow: hidden;
-  font-family: sans-serif;
+  font-family: pf din mono, sans-serif;
   background-image:
     linear-gradient(
       rgba(0, 0, 0, 0),
