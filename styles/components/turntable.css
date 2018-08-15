@@ -2,6 +2,10 @@
   position: absolute;
   margin: 0;
   transition: filter 0.2s ease;
+  width: 175vh;
+  height: 175vh;
+  left: calc(50% - 87.5vh);
+  top: 8vh;
 }
 
 .turntable__pin {
@@ -14,16 +18,7 @@
   background-color: #888;
 }
 
-@media (orientation: portrait) {
-  .turntable {
-    width: 175vh;
-    height: 175vh;
-    left: calc(50% - 87.5vh);
-    top: 8vh;
-  }
-}
-
-@media (orientation: landscape) {
+@media (min-aspect-ratio: 2/1) {
   .turntable {
     width: 90vw;
     height: 90vw;
