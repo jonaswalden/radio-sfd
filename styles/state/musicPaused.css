@@ -13,10 +13,10 @@
 }
 
 .state-music-paused .turntable,
-.state-music-paused .controls__repeat-alert {
+.state-music-paused .controls__repeat-alert  {
   filter: grayscale(100%);
 }
 
-.state-music-paused .controls__pause-music {
-  display: none;
+.state-music-paused .controls__play-music {
+  display: inline-flex;
 }

@@ -1,5 +1,5 @@
-.state-music-playing .controls__play-music {
-  display: none;
+.state-music-playing .controls__pause-music {
+  display: inline-flex;
 }
 
 .state-music-playing .record,

@@ -24,3 +24,17 @@ body {
   transition: 0.5s ease;
   transition-property: background-image, background-position;
 }
+
+button {
+  color: #fff;
+  background-color: hsl(219, 63%, 33%);
+  border: none;
+  padding: 0;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+}
+
+button:focus {
+  outline: none;
+}

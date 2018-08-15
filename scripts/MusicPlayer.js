@@ -17,7 +17,7 @@ export default function MusicPlayer (playlist) {
   }
 
   function start () {
-    playNext();
+    playNext().catch(toggleMusicState);
     audio.addEventListener('ended', playNext);
     playlist.initCache(audio);
   }
@@ -36,19 +36,19 @@ export default function MusicPlayer (playlist) {
 
   function playNext () {
     setAudioSource(audio, playlist.next());
-    audio.play();
+    return audio.play();
   }
 
   function pauseResume () {
     if (disabled) return;
 
-    document.documentElement.classList.toggle('state-music-paused', playing);
     if (playing) audio.pause();
     else audio.play();
   }
 
   function toggleMusicState (event) {
     playing = event.type === 'play';
-    document.documentElement.classList.toggle('state-music', playing);
+    document.documentElement.classList.toggle('state-music-playing', playing);
+    document.documentElement.classList.toggle('state-music-paused', !playing);
   }
 }
