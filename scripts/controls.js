@@ -2,8 +2,8 @@ export default function controls (musicPlayer, mc) {
   const [container] = document.getElementsByClassName('controls');
   const [pauseMusicButton, playMusicButton, repeatAlertButton] = container.children;
 
-  pauseMusicButton.addEventListener('click', musicPlayer.playPause);
-  playMusicButton.addEventListener('click', musicPlayer.playPause);
+  pauseMusicButton.addEventListener('click', musicPlayer.pause);
+  playMusicButton.addEventListener('click', musicPlayer.resume);
   window.addEventListener('keyup', KeyboardListener(' ', musicPlayer.pauseResume));
 
   repeatAlertButton.addEventListener('click', mc.repeatLast);
