@@ -1,38 +1,45 @@
 import csvToArray from './csvToArray.js';
-import {today, moment} from './time.js';
+import {today, tonight} from './time.js';
 
 export default function fetchSchedule (url) {
   return window.fetch(url, {mode: 'cors'})
     .then(data => data.text())
     .then(csvToArray)
     .then(removeEmpty)
-    .then(sortSchedule)
+    .then(renderItemQueues)
     .then(groupByTense);
 
-  function removeEmpty (objList) {
-    return objList.filter(obj => {
-      return !Object.values(obj).includes('');
+  function removeEmpty (items) {
+    return items.filter(item => {
+      return !Object.values(item).includes('');
     });
   }
 
-  function sortSchedule (items) {
-    const itemMomentMap = new Map();
+  function renderItemQueues(items) {
+    let firstItemQueue;
+    let date = today;
+    return items.map(render);
 
-    return items.sort(byMoment);
+    function render (item, index) {
+      const queueString = item.queue;
+      let queue = dateFromString(queueString);
 
-    function byMoment (a, b) {
-      return getMoment(a) > getMoment(b) ? 1 : -1;
+      if (index === 0) {
+        firstItemQueue = queue;
+      }
+      else if (queue < firstItemQueue) {
+        date = tonight;
+        queue = dateFromString(queueString);
+      }
+
+      return Object.assign({}, item, {queue});
     }
 
-    function getMoment(item) {
-      const map = itemMomentMap;
-      let value = map.get(item.queue);
-      if (value) return value;
-
-      value =  moment(today, item.queue);
-      map.set(item, value);
-
-      return value;
+    function dateFromString (queueString) {
+      const moment = queueString.split(':').map(Number);
+      const queue = new Date(date);
+      queue.setHours(...moment);
+      return queue;
     }
   }
 

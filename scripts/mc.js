@@ -1,5 +1,4 @@
 import setAudioSource from './setAudioSource.js';
-import {today, tomorrow, moment} from './time.js'
 
 export default function MC (schedule, messages, musicPlayer) {
   const audio = document.getElementById('alert-player');
@@ -12,13 +11,11 @@ export default function MC (schedule, messages, musicPlayer) {
   }
 
   function queueNext () {
-    const upcoming = getUpcoming();
-    const now = Date.now();
-    let timeout = moment(today, upcoming.queue) - now;
+    const [upcoming] = schedule.upcoming;
+    if (!upcoming) return;
 
-    if (timeout < 0) {
-      timeout = moment(tomorrow, upcoming.queue) - now;
-    }
+    const timeout = upcoming.queue - Date.now();
+    if (timeout < 0) ;
 
     window.setTimeout(playNext, timeout);
 
@@ -35,8 +32,10 @@ export default function MC (schedule, messages, musicPlayer) {
     play(last.message);
   }
 
-  async function play (messageKey) {
-    const message = messages[messageKey];
+  async function play (messageId) {
+    const message = messages[messageId];
+    if (!message) return;
+
     toggleAlertState(true);
     musicPlayer.pause();
 
@@ -67,15 +66,6 @@ export default function MC (schedule, messages, musicPlayer) {
         audio.addEventListener('ended', resolve, {once: true});
       });
     }
-  }
-
-  function getUpcoming () {
-    if (!schedule.upcoming.length) {
-      schedule.upcoming = schedule.passed;
-      schedule.passed = [];
-    }
-
-    return schedule.upcoming[0];
   }
 
   function toggleAlertState (on) {
