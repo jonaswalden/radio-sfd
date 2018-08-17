@@ -1,5 +1,4 @@
 import csvToArray from './csvToArray.js';
-import {today, tonight} from './time.js';
 
 export default function fetchSchedule (url) {
   return window.fetch(url, {mode: 'cors'})
@@ -17,7 +16,7 @@ export default function fetchSchedule (url) {
 
   function renderItemQueues(items) {
     let firstItemQueue;
-    let date = today;
+    let date = window.today;
     return items.map(render);
 
     function render (item, index) {
@@ -28,7 +27,7 @@ export default function fetchSchedule (url) {
         firstItemQueue = queue;
       }
       else if (queue < firstItemQueue) {
-        date = tonight;
+        date = window.tonight;
         queue = dateFromString(queueString);
       }
 

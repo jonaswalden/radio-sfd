@@ -43,6 +43,20 @@
 
     <script>
       (() => {
+        const date = new Date();
+        const thisYear = date.getFullYear();
+        const today = new Date(thisYear, 3, 2);
+        const tonight = new Date(thisYear, 3, 3);
+
+        if (date > tonight) {
+          const nextYear = thisYear + 1;
+          today.setYear(nextYear);
+          tonight.setYear(nextYear);
+        }
+
+        window.today = today;
+        window.tonight = tonight;
+
         const dataBaseUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSOm2jJdkR4kfIm2py2T1-KTu3d5h6naSu8T5L3NcOoxapLkU-BHGZ3uErCgRfl7TL90ttcwm_7VN8n/pub";
         window.scheduleUrl = `${dataBaseUrl}?output=csv&gid=0`;
         window.messagesUrl = `${dataBaseUrl}?output=csv&gid=2089493124`;
@@ -55,6 +69,12 @@
     <script>
       (() => {
         if (window.location.hash !== "#dev") return;
+
+        const [year, month, date] = ((date) => {
+          return [date.getFullYear(), date.getMonth(), date.getDate()];
+        })(new Date());
+        window.today = new Date(year, month, date);
+        window.tonight = new Date(year, month, date + 1);
 
         const queue = new Date();
         const devMessages =
