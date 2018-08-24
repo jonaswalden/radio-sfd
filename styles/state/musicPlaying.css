@@ -3,6 +3,8 @@
 }
 
 .state-music-playing .record,
-.state-music-playing .record__label {
+.state-music-playing .record__label,
+.state-music-playing .record__transfers,
+.state-music-playing .record__glare {
   animation-play-state: running;
 }
