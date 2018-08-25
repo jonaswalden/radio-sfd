@@ -1,11 +1,13 @@
 .turntable {
+  --size: 130vh;
   position: absolute;
   margin: 0;
   transition: filter 0.2s ease;
-  width: 175vh;
-  height: 175vh;
-  left: calc(50% - 87.5vh);
-  top: 8vh;
+  width: var(--size);
+  height: var(--size);
+  left: 50%;
+  top: 100%;
+  transform: translate(-50%, -55%);
 }
 
 .turntable__pin {
@@ -16,13 +18,4 @@
   top: 49%;
   border-radius: 50%;
   background-color: #888;
-}
-
-@media (min-aspect-ratio: 2/1) {
-  .turntable {
-    width: 90vw;
-    height: 90vw;
-    left: 5vw;
-    top: calc(100% - 48vw);
-  }
 }
