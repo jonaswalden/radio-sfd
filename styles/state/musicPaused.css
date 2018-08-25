@@ -14,7 +14,7 @@
 
 .state-music-paused .turntable,
 .state-music-paused .controls__repeat-alert  {
-  filter: grayscale(100%);
+  filter: grayscale(100%) contrast(80%);
 }
 
 .state-music-paused .controls__play-music {
