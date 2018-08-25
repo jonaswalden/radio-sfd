@@ -5,34 +5,40 @@
   left: 0;
   animation: wobble 1.82s infinite linear;
   animation-play-state: paused;
-  border-radius: 50%;
-  box-shadow: 0 80px 100px rgba(0,0,0,0.3);
 }
 
-.record__vinyl {
-  width: 100%;
-  display: block;
-}
-
+.record__transfers,
 .record__label {
-  position: absolute;
-  width: 34.4%;
-  top: 32.8%;
-  left: 32.8%;
+  transform-origin: center;
   animation: spin 1.82s infinite linear;
   animation-play-state: paused;
 }
 
+.record__glare {
+  transform-origin: center;
+  animation: pulse 1.82s infinite linear;
+  animation-direction: alternate;
+  animation-play-state: paused;
+}
+
+.record__glare:nth-child(2) {
+  animation-direction: alternate-reverse;
+}
 
 @keyframes wobble {
-  0% { transform: rotateX(5deg) rotateY(0deg); }
-  25% { transform: rotateX(0deg) rotateY(5deg); }
-  50% { transform: rotateX(-5deg) rotateY(0deg); }
-  75% { transform: rotateX(0deg) rotateY(-5deg); }
-  100% { transform: rotateX(5deg) rotateY(0deg); }
+  0% { transform: rotate3d(1, 0, 0, 5deg); }
+  25% { transform: rotate3d(0, 1, 0, 5deg); }
+  50% { transform: rotate3d(1, 0, 0, -5deg); }
+  75% { transform: rotate3d(0, 1, 0, -5deg); }
+  100% { transform: rotate3d(1, 0, 0, 5deg); }
 }
 
 @keyframes spin {
-  from { transform: rotateZ(124deg); }
-  to { transform: rotateZ(484deg); }
+  from { transform: rotate3d(0, 0, 1, 124deg); }
+  to { transform: rotate3d(0, 0, 1, 484deg); }
+}
+
+@keyframes pulse {
+  from { transform: rotate3d(0, 0, 1, -0.5deg); }
+  to { transform: rotate3d(0, 0, 1, 0.5deg); }
 }
