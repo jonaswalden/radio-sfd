@@ -5,6 +5,7 @@
 @import "./components/alertPlayer.css";
 @import "./components/turntable.css";
 @import "./components/record.css";
+@import "./components/recordBurst.css";
 
 @import "./state/musicPlaying.css";
 @import "./state/musicPaused.css";
