@@ -35,7 +35,7 @@
     </main>
 
     <figure class="turntable">
-      <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 504 504">
+      <svg class="record" viewBox="0 0 504 504">
       	<symbol id="glare" viewBox="0 0 504 504">
       		<path d="M252,252L23.337,351.929c24.089,55.042,67.457,99.716,121.577,125.474L252,252z"/>
       		<path d="M252,252l228.663-99.929c-24.089-55.042-67.457-99.715-121.577-125.473L252,252z"/>
@@ -43,18 +43,11 @@
 
   			<symbol id="track-transfers" viewBox="0 0 504 504">
   				<circle cx="252" cy="252" r="139.75"/>
-  				<path d="M252,412c88.366,0,156.625-71.634,156.625-160
-  					c0-86.502-70.123-153.25-156.625-153.25v0c-84.639,0-149.875,68.611-149.875,153.25c0,82.773,67.102,146.5,149.875,146.5
-  					c80.91,0,143.125-65.59,143.125-146.5l0,0c0-79.047-64.078-139.75-143.125-139.75"/>
-  				<path d="M252,464.201
-  					c116.674,0,211.258-94.584,211.258-211.258c0-116.674-94.584-211.257-211.258-211.257"/>
-  				<path d="M2.5,252
-  					c0,137.796,111.704,247.767,249.5,247.767c136.838,0,246.033-110.929,246.033-247.767C498.033,116.119,387.881,7.7,252,7.7
-  					C117.076,7.7,9.434,117.077,9.434,252c0,133.966,108.601,240.833,242.566,240.833"/>
-  				<path d="M501.5,252
-  					C501.5,114.205,389.795,4.233,252,4.233C115.162,4.233,5.967,115.162,5.967,252c0,135.881,110.152,244.3,246.033,244.3
-  					c134.924,0,242.566-109.376,242.566-244.3c0-133.966-108.601-240.833-242.566-240.833"/>
-  			</symbol>
+  				<path d="M252,412c88.366,0,156.625-71.634,156.625-160 c0-86.502-70.123-153.25-156.625-153.25v0c-84.639,0-149.875,68.611-149.875,153.25c0,82.773,67.102,146.5,149.875,146.5 c80.91,0,143.125-65.59,143.125-146.5l0,0c0-79.047-64.078-139.75-143.125-139.75"/>
+  				<path d="M252,464.201 c116.674,0,211.258-94.584,211.258-211.258c0-116.674-94.584-211.257-211.258-211.257"/>
+  				<path d="M2.5,252 c0,137.796,111.704,247.767,249.5,247.767c136.838,0,246.033-110.929,246.033-247.767C498.033,116.119,387.881,7.7,252,7.7 C117.076,7.7,9.434,117.077,9.434,252c0,133.966,108.601,240.833,242.566,240.833"/>
+  				<path d="M501.5,252 C501.5,114.205,389.795,4.233,252,4.233C115.162,4.233,5.967,115.162,5.967,252c0,135.881,110.152,244.3,246.033,244.3 c134.924,0,242.566-109.376,242.566-244.3c0-133.966-108.601-240.833-242.566-240.833"/>
+        </symbol>
 
   			<symbol id="track-2" viewBox="0 0 504 504">
   				<circle cx="252" cy="252" r="159.698"/>
@@ -167,10 +160,12 @@
   				<circle cx="252" cy="252" r="212.201"/>
       	</symbol>
 
-      	<mask id="glare-mask">
-      		<rect fill="#000" x="0" y="0" width="100%" height="100%" />
-      		<use class="record__glare" fill="#fff" xlink:href="#glare"></use>
-      		<use class="record__glare" fill="#fff" xlink:href="#glare"></use>
+      	<mask id="glare-mask" mask="url(#pin-hole)">
+          <g mask="url(#pin-hole)">
+        		<rect fill="#000" x="0" y="0" width="100%" height="100%" />
+        		<use class="record__glare" fill="#fff" xlink:href="#glare"></use>
+        		<use class="record__glare" fill="#fff" xlink:href="#glare"></use>
+      	  </g>
       	</mask>
 
       	<mask id="pin-hole">
@@ -178,30 +173,26 @@
       		<circle cx="252" cy="252" r="10.347"/>
       	</mask>
 
-      	<path id="wax" mask="url(#pin-hole)" fill="#E81F2E" d="M252,0C112.824,0,0,112.824,0,252s112.824,252,252,252s252-112.824,252-252S391.176,0,252,0z
-      		 M252.001,262.347c-5.715,0-10.348-4.632-10.348-10.347c0-5.714,4.633-10.347,10.348-10.347c5.714,0,10.346,4.633,10.346,10.347
-      		C262.347,257.715,257.715,262.347,252.001,262.347z"/>
+      	<path id="wax" mask="url(#pin-hole)" fill="#E81F2E" d="M252,0C112.824,0,0,112.824,0,252s112.824,252,252,252s252-112.824,252-252S391.176,0,252,0z M252.001,262.347c-5.715,0-10.348-4.632-10.348-10.347c0-5.714,4.633-10.347,10.348-10.347c5.714,0,10.346,4.633,10.346,10.347 C262.347,257.715,257.715,262.347,252.001,262.347z"/>
 
-      		<g fill="none" stroke-width="0.25">
-            <g stroke="#B2192C">
-              <use class="record__transfers" xlink:href="#track-transfers"></use>
-              <use xlink:href="#track-1"></use>
-              <use xlink:href="#track-2"></use>
-            </g>
-
-            <g stroke="#fff" mask="url(#glare-mask)">
-          		<rect fill="#ffffffdd" x="0" y="0" width="100%" height="100%" />
-              <use class="record__transfers" xlink:href="#track-transfers"></use>
-              <use xlink:href="#track-1"></use>
-              <use xlink:href="#track-2"></use>
-            </g>
+      	<g fill="none" stroke-width="0.25">
+          <g stroke="#B2192C">
+            <use class="record__transfers" xlink:href="#track-transfers"></use>
+            <use xlink:href="#track-1"></use>
+            <use xlink:href="#track-2"></use>
           </g>
 
+          <g stroke="#fff" mask="url(#glare-mask)">
+        		<rect fill="#ffffffdd" x="0" y="0" width="100%" height="100%" />
+            <use class="record__transfers" xlink:href="#track-transfers"></use>
+            <use xlink:href="#track-1"></use>
+            <use xlink:href="#track-2"></use>
+          </g>
+        </g>
 
       	<image class="record__label" xlink:href="./images/label.svg" mask="url(#pin-hole)" width="247.458" height="247.458" x="128.271" y="128.271"/>
       	<circle id="label-emboss" fill="none" stroke="#E81F2E" stroke-width="0.25" cx="252" cy="252" r="35.875"/>
       </svg>
-
     </figure>
 
     <script>
