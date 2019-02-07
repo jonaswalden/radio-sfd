@@ -303,7 +303,7 @@
     </figure>
 
     <script>
-      (() => {
+      ((config) => {
         const date = new Date();
         const thisYear = date.getFullYear();
         const today = new Date(thisYear, 3, 2);
@@ -315,27 +315,28 @@
           tonight.setYear(nextYear);
         }
 
-        window.today = today;
-        window.tonight = tonight;
+        config.today = today;
+        config.tonight = tonight;
 
         const dataBaseUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSOm2jJdkR4kfIm2py2T1-KTu3d5h6naSu8T5L3NcOoxapLkU-BHGZ3uErCgRfl7TL90ttcwm_7VN8n/pub";
-        window.scheduleUrl = `${dataBaseUrl}?output=csv&gid=0`;
-        window.messagesUrl = `${dataBaseUrl}?output=csv&gid=2089493124`;
-        window.tracks = [
+        config.scheduleUrl = `${dataBaseUrl}?output=csv&gid=0`;
+        config.messagesUrl = `${dataBaseUrl}?output=csv&gid=2089493124`;
+        config.tracks = [
           "audio/music/track-a.mp3#t=3.6,107",
           "audio/music/track-b.mp3",
         ];
-      })();
+      })(window.config = window.config || {});
     </script>
+
     <script>
-      (() => {
+      ((config) => {
         if (window.location.hash !== "#dev") return;
 
         const [year, month, date] = ((date) => {
           return [date.getFullYear(), date.getMonth(), date.getDate()];
         })(new Date());
-        window.today = new Date(year, month, date);
-        window.tonight = new Date(year, month, date + 1);
+        config.today = new Date(year, month, date);
+        config.tonight = new Date(year, month, date + 1);
 
         const queue = new Date();
         const devMessages =
@@ -350,16 +351,16 @@
           `${nextQueue()},msg-a\n` +
           `${nextQueue()},msg-b\n`;
 
-        window.messagesUrl = 'data:,' + window.encodeURIComponent(devMessages);
-        window.scheduleUrl = 'data:,' + window.encodeURIComponent(devSchedule);
+        config.messagesUrl = 'data:,' + window.encodeURIComponent(devMessages);
+        config.scheduleUrl = 'data:,' + window.encodeURIComponent(devSchedule);
 
         function nextQueue () {
-          queue.setMinutes(queue.getMinutes() + 1);
-          return queue.getHours() + ':' + queue.getMinutes();
+          queue.setSeconds(queue.getSeconds() + 15);
+          return queue.getHours() + ':' + queue.getMinutes() + ':' + queue.getSeconds();
         }
-      })();
+      })(window.config = window.config || {});
     </script>
-
+    
     <script async type="module" src="/scripts/main.js"></script>
 
     <svg>
