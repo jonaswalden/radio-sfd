@@ -40,6 +40,6 @@ function toDomString (domString) {
 }
 
 function Browser (text) {
-  Compiler([/scripts/]);
+  Compiler([/scripts/], [], []);
   return Tallahassee({}).load({ text });
 }

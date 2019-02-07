@@ -5,7 +5,7 @@ module.exports = function addTimout (window) {
   window.setTimeout = setMockTimeout;
   return timeouts;
 
-  function setMockTimeout (...args) {
-    timeouts.push(args);
+  function setMockTimeout (fn, delay) {
+    timeouts.push([fn, delay]);
   }
 };
