@@ -8,7 +8,7 @@ const navigate = require('./helpers/navigate');
 const nock = require('nock');
 const {Storage} = require('@expressen/tallahassee/lib');
 
-Feature("Playback", () => {
+Feature('Playback', () => {
   Scenario('Generic playback', () => {
     after(() => {
       delete global.window;
@@ -51,7 +51,7 @@ Feature("Playback", () => {
         .reply(200, scheduleCSV);
     });
 
-    And("event is today", () => {
+    And('event is today', () => {
       config.today = new Date('2012-04-02 09:00');
       config.tonight = new Date('2012-04-03');
       ck.freeze(config.today);

@@ -1,11 +1,10 @@
-"use strict";
+'use strict';
 
-import assert from "assert";
-import addMediaInterface from "./helpers/addMediaInterface";
-import addTimeoutInterface from "./helpers/addTimeoutInterface";
-import ck from "chronokinesis";
-import MusicPlayer from "../scripts/MusicPlayer";
-import navigate from "./helpers/navigate";
+import assert from 'assert';
+import addMediaInterface from './helpers/addMediaInterface';
+import ck from 'chronokinesis';
+import MusicPlayer from '../scripts/MusicPlayer';
+import navigate from './helpers/navigate';
 
 describe('MusicPlayer', () => {
   const Browser = navigate.toDomString.bind(null, `
@@ -20,26 +19,26 @@ describe('MusicPlayer', () => {
     delete global.document;
   });
 
-  describe("Pausing playback", () => {
-    scenario("User pause and resume", () => {
+  describe('Pausing playback', () => {
+    scenario('User pause and resume', () => {
       let browser, audio;
       before('page loads', async () => {
         browser = await Browser();
-        audio = browser.document.getElementById("music-player");
+        audio = browser.document.getElementById('music-player');
         assert(audio);
         addMediaInterface(audio);
       });
 
-      let musicPlayer, playlist;
+      let musicPlayer;
       before('player is started', () => {
-        musicPlayer = MusicPlayer(playlist = MockPlaylist());
+        musicPlayer = MusicPlayer(MockPlaylist());
         musicPlayer.start();
       });
 
       given('music is playing', () => {
         assert.equal(true, audio._playing);
-        assert.equal(true, document.documentElement.classList.contains("state-music-playing"));
-        assert.equal(false, document.documentElement.classList.contains("state-music-paused"));
+        assert.equal(true, browser.document.documentElement.classList.contains('state-music-playing'));
+        assert.equal(false, browser.document.documentElement.classList.contains('state-music-paused'));
       });
 
       when('user hits pause', () => {
@@ -48,8 +47,8 @@ describe('MusicPlayer', () => {
 
       then('music is fully paused', () => {
         assert.equal(false, audio._playing);
-        assert.equal(false, document.documentElement.classList.contains("state-music-playing"));
-        assert.equal(true, document.documentElement.classList.contains("state-music-paused"));
+        assert.equal(false, browser.document.documentElement.classList.contains('state-music-playing'));
+        assert.equal(true, browser.document.documentElement.classList.contains('state-music-paused'));
       });
 
       when('user hits resume', () => {
@@ -58,30 +57,30 @@ describe('MusicPlayer', () => {
 
       then('music is playing', () => {
         assert.equal(true, audio._playing);
-        assert.equal(true, document.documentElement.classList.contains("state-music-playing"));
-        assert.equal(false, document.documentElement.classList.contains("state-music-paused"));
+        assert.equal(true, browser.document.documentElement.classList.contains('state-music-playing'));
+        assert.equal(false, browser.document.documentElement.classList.contains('state-music-paused'));
       });
     });    
 
-    scenario("System pause and resume", () => {
+    scenario('System pause and resume', () => {
       let browser, audio;
       before('page loads', async () => {
         browser = await Browser();
-        audio = browser.document.getElementById("music-player");
+        audio = browser.document.getElementById('music-player');
         assert(audio);
         addMediaInterface(audio);
       });
 
-      let musicPlayer, playlist;
+      let musicPlayer;
       before('player is started', () => {
-        musicPlayer = MusicPlayer(playlist = MockPlaylist());
+        musicPlayer = MusicPlayer(MockPlaylist());
         musicPlayer.start();
       });
 
       given('music is playing', () => {
         assert.equal(true, audio._playing);
-        assert.equal(true, document.documentElement.classList.contains("state-music-playing"));
-        assert.equal(false, document.documentElement.classList.contains("state-music-paused"));
+        assert.equal(true, browser.document.documentElement.classList.contains('state-music-playing'));
+        assert.equal(false, browser.document.documentElement.classList.contains('state-music-paused'));
       });
 
       when('system hits pause', () => {
@@ -90,8 +89,8 @@ describe('MusicPlayer', () => {
 
       then('music is half paused', () => {
         assert.equal(false, audio._playing);
-        assert.equal(false, document.documentElement.classList.contains("state-music-playing"));
-        assert.equal(false, document.documentElement.classList.contains("state-music-paused"));
+        assert.equal(false, browser.document.documentElement.classList.contains('state-music-playing'));
+        assert.equal(false, browser.document.documentElement.classList.contains('state-music-paused'));
       });
 
       when('system hits resume', () => {
@@ -100,23 +99,23 @@ describe('MusicPlayer', () => {
 
       then('music is playing', () => {
         assert.equal(true, audio._playing);
-        assert.equal(true, document.documentElement.classList.contains("state-music-playing"));
-        assert.equal(false, document.documentElement.classList.contains("state-music-paused"));
+        assert.equal(true, browser.document.documentElement.classList.contains('state-music-playing'));
+        assert.equal(false, browser.document.documentElement.classList.contains('state-music-paused'));
       });
     });
 
-    scenario("System pause and resume while music was already paused", () => {
+    scenario('System pause and resume while music was already paused', () => {
       let browser, audio;
       before('page loads', async () => {
         browser = await Browser();
-        audio = browser.document.getElementById("music-player");
+        audio = browser.document.getElementById('music-player');
         assert(audio);
         addMediaInterface(audio);
       });
 
-      let musicPlayer, playlist;
+      let musicPlayer;
       before('player is started', () => {
-        musicPlayer = MusicPlayer(playlist = MockPlaylist());
+        musicPlayer = MusicPlayer(MockPlaylist());
         musicPlayer.start();
       });
 
@@ -130,8 +129,8 @@ describe('MusicPlayer', () => {
 
       then('music is fully paused', () => {
         assert.equal(false, audio._playing);
-        assert.equal(false, document.documentElement.classList.contains("state-music-playing"));
-        assert.equal(true, document.documentElement.classList.contains("state-music-paused"));
+        assert.equal(false, browser.document.documentElement.classList.contains('state-music-playing'));
+        assert.equal(true, browser.document.documentElement.classList.contains('state-music-paused'));
       });
 
       when('system hits resume', () => {
@@ -140,23 +139,23 @@ describe('MusicPlayer', () => {
 
       then('music is fully paused', () => {
         assert.equal(false, audio._playing);
-        assert.equal(false, document.documentElement.classList.contains("state-music-playing"));
-        assert.equal(true, document.documentElement.classList.contains("state-music-paused"));
+        assert.equal(false, browser.document.documentElement.classList.contains('state-music-playing'));
+        assert.equal(true, browser.document.documentElement.classList.contains('state-music-paused'));
       });
     });
 
-    scenario("User resume after non-effective system resume", () => {
+    scenario('User resume after non-effective system resume', () => {
       let browser, audio;
       before('page loads', async () => {
         browser = await Browser();
-        audio = browser.document.getElementById("music-player");
+        audio = browser.document.getElementById('music-player');
         assert(audio);
         addMediaInterface(audio);
       });
 
-      let musicPlayer, playlist;
+      let musicPlayer;
       before('player is started', () => {
-        musicPlayer = MusicPlayer(playlist = MockPlaylist());
+        musicPlayer = MusicPlayer(MockPlaylist());
         musicPlayer.start();
       });
 
@@ -175,8 +174,8 @@ describe('MusicPlayer', () => {
 
       then('music is playing', () => {
         assert.equal(true, audio._playing);
-        assert.equal(true, document.documentElement.classList.contains("state-music-playing"));
-        assert.equal(false, document.documentElement.classList.contains("state-music-paused"));
+        assert.equal(true, browser.document.documentElement.classList.contains('state-music-playing'));
+        assert.equal(false, browser.document.documentElement.classList.contains('state-music-paused'));
       });
     });
   });
@@ -188,6 +187,6 @@ function MockPlaylist () {
     initCache () {},
     next () {
       return 'track-' + trackNumber;
-    }
+    },
   };
 }
