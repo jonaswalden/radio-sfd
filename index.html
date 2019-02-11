@@ -42,7 +42,7 @@
       		<rect fill="#fff" x="0" y="0" width="100%" height="100%" />
           <circle cx="504" cy="504" r="257.908"/>
         </mask>
-      	<g mask="url(#burst-mask)" fill="#A8A7A6">
+      	<g mask="url(#burst-mask)" fill="hsla(30,1%,0%,0.294)" fill="#A8A7A6">
     			<polygon points="507.637,503.459 469.301,248.286 447.911,130.693 462.02,249.332 500.362,504.547"/>
     			<polygon points="507.675,504 507.675,245.961 503.997,126.5 500.32,245.914 500.32,504"/>
     			<polygon points="500.32,504 500.32,762.039 503.997,881.5 507.675,762.086 507.675,504"/>
@@ -54,8 +54,6 @@
     			<polygon points="500.685,502.402 388.608,734.833 340.035,844.035 395.213,738.067 507.308,505.599"/>
     			<polygon points="507.033,506.075 652.496,292.941 716.802,192.198 646.448,288.757 500.961,501.926"/>
     			<polygon points="500.961,501.926 355.498,715.06 291.193,815.803 361.546,719.242 507.033,506.075"/>
-    			<polygon points="506.69,506.506 682.294,317.431 760.896,227.396 676.938,312.393 501.304,501.497"/>
-    			<polygon points="501.304,501.497 325.701,690.569 247.1,780.604 331.059,695.608 506.69,506.506"/>
     			<polygon points="506.69,506.506 682.294,317.431 760.896,227.396 676.938,312.393 501.304,501.497"/>
     			<polygon points="501.304,501.497 325.701,690.569 247.1,780.604 331.059,695.608 506.69,506.506"/>
     			<polygon points="506.288,506.879 708.108,346.088 799.253,268.775 703.564,340.308 501.708,501.125"/>
@@ -73,9 +71,7 @@
     			<polygon points="503.175,507.585 754.719,565.128 871.992,588.187 756.404,557.971 504.82,500.417"/>
     			<polygon points="504.82,500.417 253.281,442.869 136.003,419.816 251.594,450.029 503.175,507.585"/>
     			<polygon points="502.65,507.422 742.809,601.812 855.337,642.089 745.544,594.986 505.346,500.58"/>
-    			<polygon points="505.346,500.58 265.191,406.187 152.661,365.914 262.458,413.016 502.65,507.422"/>
-    			<polygon points="502.156,507.184 725.562,636.313 830.829,692.915 729.285,629.972 505.841,500.819"/>
-    			<polygon points="505.841,500.819 282.439,371.686 177.167,315.089 278.718,378.03 502.156,507.184"/>
+    			<polygon points="505.346,500.58 265.191,406.187 152.661,365.914 262.458,413.016 502.65,507.422"/>    			
     			<polygon points="502.156,507.184 725.562,636.313 830.829,692.915 729.285,629.972 505.841,500.819"/>
     			<polygon points="505.841,500.819 282.439,371.686 177.167,315.089 278.718,378.03 502.156,507.184"/>
     			<polygon points="501.703,506.875 703.371,667.854 799.028,739.51 707.999,662.136 506.295,501.129"/>
@@ -275,26 +271,23 @@
           <rect fill="#000" x="0" y="0" width="100%" height="100%" />
           <use class="record__glare" fill="#fff" xlink:href="#glare" mask="url(#pin-hole)"></use>
         </mask>
+        
+        <circle id="wax" mask="url(#pin-hole)" fill="#E81F2E" cx="252" cy="252" r="252"/>
 
-      	<path id="wax" mask="url(#pin-hole)" fill="#E81F2E" d="M252,0C112.824,0,0,112.824,0,252s112.824,252,252,252s252-112.824,252-252S391.176,0,252,0z
-      		 M252.001,262.347c-5.715,0-10.348-4.632-10.348-10.347c0-5.714,4.633-10.347,10.348-10.347c5.714,0,10.346,4.633,10.346,10.347
-      		C262.347,257.715,257.715,262.347,252.001,262.347z"/>
-
-      		<g fill="none" stroke-width="0.25">
-            <g stroke="#B2192C">
-              <use class="record__transfers" xlink:href="#track-transfers"></use>
-              <use xlink:href="#track-1"></use>
-              <use xlink:href="#track-2"></use>
-            </g>
-
-            <g stroke="#fff" mask="url(#glare-mask)">
-          		<rect fill="#ffffffdd" x="0" y="0" width="100%" height="100%" />
-              <use class="record__transfers" xlink:href="#track-transfers"></use>
-              <use xlink:href="#track-1"></use>
-              <use xlink:href="#track-2"></use>
-            </g>
+    		<g fill="none" stroke-width="0.25">
+          <g stroke="#B2192C">
+            <use class="record__transfers" xlink:href="#track-transfers"></use>
+            <use xlink:href="#track-1"></use>
+            <use xlink:href="#track-2"></use>
           </g>
 
+          <g stroke="#fff" mask="url(#glare-mask)">
+        		<rect fill="#ffffffdd" x="0" y="0" width="100%" height="100%" />
+            <use class="record__transfers" xlink:href="#track-transfers"></use>
+            <use xlink:href="#track-1"></use>
+            <use xlink:href="#track-2"></use>
+          </g>
+        </g>
 
       	<image class="record__label" xlink:href="./images/label.svg" mask="url(#pin-hole)" width="247.458" height="247.458" x="128.271" y="128.271"/>
       	<circle id="label-emboss" fill="none" stroke="#E81F2E" stroke-width="0.25" cx="252" cy="252" r="35.875"/>
