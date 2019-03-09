@@ -4,6 +4,10 @@ export default function fetchSchedule (url, today, tonight) {
   return window.fetch(url, {mode: 'cors'})
     .then(data => data.text())
     .then(csvToArray)
+    .catch(err => {
+      console.warn('Error fetching schedule', err);
+      return [];
+    })
     .then(removeEmpty)
     .then(renderItemQueues)
     .then(groupByTense);
