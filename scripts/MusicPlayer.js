@@ -1,12 +1,9 @@
 import setAudioSource from './setAudioSource.js';
 
 export default function MusicPlayer (playlist) {
-  const audio = document.getElementById('music-player');
   let playing = false;
-  let disabled = false;
   let wasPlayingWhenPaused = false;
-  audio.addEventListener('play', toggleMusicState);
-  audio.addEventListener('pause', toggleMusicState);
+  const audio = document.getElementById('music-player');
   audio.volume = 0.4;
 
   return {
@@ -16,22 +13,36 @@ export default function MusicPlayer (playlist) {
     pauseResume,
   }
 
-  function start () {
-    playNext().catch(toggleMusicState);
+  async function start () {
+    try {
+      await playNext();
+      toggleMusicState(true);
+    }
+    catch (err) {
+      toggleMusicState(false, false);
+    }
+
     audio.addEventListener('ended', playNext);
     playlist.initCache(audio);
   }
 
-  function pause () {
-    disabled = true;
+  function pause (manual) {
     wasPlayingWhenPaused = playing;
+
     audio.pause();
+    toggleMusicState(false, !!manual);
   }
 
-  function resume () {
-    disabled = false;
-    if (!wasPlayingWhenPaused) return;
+  function resume (manual) {
+    if (!manual && !wasPlayingWhenPaused) return;
+
     audio.play();
+    toggleMusicState(true, !!manual);
+  }
+
+  function pauseResume (...args) {
+    if (playing) pause(...args);
+    else resume(...args);
   }
 
   function playNext () {
@@ -39,16 +50,15 @@ export default function MusicPlayer (playlist) {
     return audio.play();
   }
 
-  function pauseResume () {
-    if (disabled) return;
-
-    if (playing) audio.pause();
-    else audio.play();
-  }
-
-  function toggleMusicState (event) {
-    playing = event.type === 'play';
+  function toggleMusicState (playingValue, hard) {
+    playing = playingValue;
     document.documentElement.classList.toggle('state-music-playing', playing);
-    document.documentElement.classList.toggle('state-music-paused', !playing);
+
+    if (playing) {
+      document.documentElement.classList.remove('state-music-paused');
+    }
+    else if (hard) {
+      document.documentElement.classList.add('state-music-paused');
+    }
   }
 }

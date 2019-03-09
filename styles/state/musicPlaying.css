@@ -5,6 +5,7 @@
 .state-music-playing .record,
 .state-music-playing .record__label,
 .state-music-playing .record__transfers,
-.state-music-playing .record__glare {
+.state-music-playing .record__glare,
+.state-music-playing .record-burst {
   animation-play-state: running;
 }

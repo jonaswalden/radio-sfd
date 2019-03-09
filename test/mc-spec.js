@@ -1,47 +1,239 @@
-"use strict";
+'use strict';
 
-const {test} = require("ava");
-const addMediaInterface = require("./helpers/addMediaInterface");
-const addTimeout = require("./helpers/addTimeout");
-const ck = require("chronokinesis");
-const navigate = require("./helpers/navigate");
+import assert from 'assert';
+import addMediaInterface from './helpers/addMediaInterface';
+import addTimeoutInterface from './helpers/addTimeoutInterface';
+import ck from 'chronokinesis';
+import MC from '../scripts/MC';
+import navigate from './helpers/navigate';
 
-const today = "2012-04-02";
-let browser, timeouts;
-test.beforeEach(async () => {
-  browser = await navigate.toDomString(`
+describe('MC', () => {
+  const today = '2012-04-02';
+  const now = new Date(`${today} 10:00`);
+  const recently = new Date(`${today} 09:50`);
+  const soon = new Date(`${today} 10:10`);
+  const messages = {
+    'no': {text: 'nope', audio: 'audio/nope.mp3'},
+    'a': {text: 'Message a', audio: 'audio/message-a.mp3'},
+    'b': {text: 'Message b', audio: 'audio/message-b.mp3'},
+    'c': {text: 'Message c', audio: 'audio/message-c.mp3'},
+  };
+
+  const Browser = navigate.toDomString.bind(null, `
     <html>
-      <audio id="alert-player__audio"></audio>
+      <audio id="alert-player"></audio>
       <blockquote class="alert-player__text"></blockquote>
-      <button class="alert-player__repeat-button" type="button">
-        Repeat
-      </button>
     </html>
   `);
-  addTimeout(browser.window, timeouts = []);
+
+  before(() => ck.freeze(now));
+
+  after(() => {
+    ck.reset();
+    delete global.window;
+    delete global.document;
+  });
+
+  describe('.start()', () => {
+    describe('queues upcoming event', () => {
+      let browser, timeouts, alertAudio, alertText;
+      before('page loads', async () => {
+        browser = await Browser();
+        timeouts = addTimeoutInterface(browser.window);
+
+        alertAudio = browser.document.getElementById('alert-player');
+        assert(alertAudio);
+        addMediaInterface(alertAudio);
+
+        [alertText] = browser.document.getElementsByClassName('alert-player__text');
+        assert(alertText);
+      });
+
+      when('starts', () => {
+        const schedule = {
+          passed: [],
+          upcoming: [
+            {queue: soon, message: 'a'},
+          ],
+        };
+        MC(schedule, messages, MockMusicPlayer()).start();
+      });
+
+      then('upcoming message is queued', () => {
+        assertTimeout(timeouts, 10 * 60 * 1000);
+      });
+    });
+
+    describe('plays upcoming event', () => {
+      let browser, timeouts, alertAudio, alertText;
+      before('page loads', async () => {
+        browser = await Browser();
+        timeouts = addTimeoutInterface(browser.window);
+
+        alertAudio = browser.document.getElementById('alert-player');
+        assert(alertAudio);
+        addMediaInterface(alertAudio);
+
+        [alertText] = browser.document.getElementsByClassName('alert-player__text');
+        assert(alertText);
+      });
+
+      let musicPlayer;
+      before('starts', () => {
+        const schedule = {
+          passed: [],
+          upcoming: [
+            {queue: now, message: 'a'},
+          ],
+        };
+        MC(schedule, messages, musicPlayer = MockMusicPlayer()).start();
+      });
+
+      let pendingMessage;
+      before('message A is queued', () => {
+        assert.equal(musicPlayer._playing, true);
+        assert.equal(browser.document.documentElement.classList.contains('state-alert'), false);
+        pendingMessage = assertTimeout(timeouts, 0);
+      });
+
+      when('message A plays', () => {
+        pendingMessage();
+      });
+
+      then('it is introduced with a vignette', async () => {
+        assert.equal(alertAudio.src, 'audio/messages/vignette.ogg');
+        assert.equal(alertText.textContent, '...');
+        assert.equal(browser.document.documentElement.classList.contains('state-alert'), true);
+        assert.equal(musicPlayer._playing, false);
+
+        alertAudio._emitter.emit('ended');
+        await awaitAsync();
+      });
+
+      and('message is played', async () => {
+        assert.equal(alertAudio.src, 'audio/message-a.mp3');
+        assert.equal(alertText.textContent, 'Message a');
+        assert.equal(browser.document.documentElement.classList.contains('state-alert'), true);
+        assert.equal(musicPlayer._playing, false);
+
+        alertAudio._emitter.emit('ended');
+        await awaitAsync();
+      });
+
+      and('followed by a breif pause', async () => {
+        assertTimeout(timeouts, 500)();
+        await awaitAsync();
+
+        assert.equal(browser.document.documentElement.classList.contains('state-alert'), false);
+      });
+    });
+
+    describe('allows repeat of passed events', () => {
+      let browser;
+      before('page loads', async () => {
+        browser = await Browser();
+        addTimeoutInterface(browser.window);
+      });
+
+      it('sets repeatable state when passed events', () => {
+        const schedule = {
+          passed:  [
+            {queue: now, message: 'a'},
+          ],
+          upcoming: [],
+        };
+        MC(schedule, messages, MockMusicPlayer()).start();
+        assert.equal(browser.document.documentElement.classList.contains('state-alert-repeatable'), true);
+      });
+
+      it('doesn\'t set repeatable state when no passed events', () => {
+        const schedule = {
+          passed: [],
+          upcoming: [],
+        };
+        MC(schedule, messages, MockMusicPlayer()).start();
+        assert.equal(browser.document.documentElement.classList.contains('state-alert-repeatable'), false);
+      });
+    });
+  });
+
+  describe('.repeatLast()', () => {
+    describe('replay passed event', () => {
+      let browser, timeouts, alertAudio, alertText;
+      before('page loads', async () => {
+        browser = await Browser();
+        timeouts = addTimeoutInterface(browser.window);
+
+        alertAudio = browser.document.getElementById('alert-player');
+        assert(alertAudio);
+        addMediaInterface(alertAudio);
+
+        [alertText] = browser.document.getElementsByClassName('alert-player__text');
+        assert(alertText);
+      });
+
+      let mc, musicPlayer;
+      before('starts', () => {
+        const schedule = {
+          passed: [
+            {queue: recently, message: 'a'},
+          ],
+          upcoming: [
+            {queue: soon, message: 'b'},
+          ],
+        };
+        mc = MC(schedule, messages, musicPlayer = MockMusicPlayer());
+        mc.start();
+      });
+      
+      when('repeatLast is called', () => {
+        mc.repeatLast();
+      });
+
+      then('last passed message A is played', async () => { 
+        assert.equal(alertAudio.src, 'audio/messages/vignette.ogg');
+        assert.equal(alertText.textContent, '...');
+        assert.equal(browser.document.documentElement.classList.contains('state-alert'), true);
+        assert.equal(musicPlayer._playing, false);
+
+        alertAudio._emitter.emit('ended');
+        await awaitAsync();
+
+        assert.equal(alertAudio.src, 'audio/message-a.mp3');
+        assert.equal(alertText.textContent, 'Message a');
+        assert.equal(browser.document.documentElement.classList.contains('state-alert'), true);
+        assert.equal(musicPlayer._playing, false);
+
+        alertAudio._emitter.emit('ended');
+        await awaitAsync();
+
+        assertTimeout(timeouts, 500, 2, 1)();
+        await awaitAsync();
+
+        assert.equal(browser.document.documentElement.classList.contains('state-alert'), false);
+      });
+
+      and('upcoming message remains queued', () => {
+        assertTimeout(timeouts, 10 * 60 * 1000)();
+      });
+    });
+  });
 });
 
-let alertAudio, alertText, alertRepeat;
-test.beforeEach(t => {
-  alertAudio = browser.document.getElementById("alert-player__audio");
-  t.truthy(alertAudio);
-  addMediaInterface(alertAudio);
+function assertTimeout (timeouts, expectedDelay, expectedCount = 1, index = 0) {
+  assert.equal(timeouts.length, expectedCount);
+  const [[fn, delay]] = timeouts.splice(index, index + 1);
 
-  [alertText] = browser.document.getElementsByClassName("alert-player__text");
-  t.truthy(alertText);
+  assert.equal(expectedDelay, delay);
+  return fn;
+}
 
-  [alertRepeat] = browser.document.getElementsByClassName("alert-player__repeat-button");
-  t.truthy(alertRepeat);
-});
+function awaitAsync () {
+  return new Promise(r => setTimeout(r));
+}
 
-let mc;
-test.beforeEach(() => {
-  mc = require("../scripts/mc").default;
-});
-
-let musicPlayer;
-test.beforeEach(() => {
-  musicPlayer = {
+function MockMusicPlayer () {
+  return {
     _playing: true,
     pause() {
       this._playing = false;
@@ -50,106 +242,4 @@ test.beforeEach(() => {
       this._playing = true;
     },
   };
-});
-
-test.afterEach(() => {
-  ck.reset();
-  delete global.window;
-  delete global.document;
-});
-
-test("skips passed key tracks", async t => {
-  ck.freeze(`${today} 10:00`);
-  const messages = {
-    "no": {text: "nope", audio: "audio/nope.mp3"},
-    "a": {text: "Message a", audio: "audio/message-a.mp3"},
-  };
-  const schedule = {
-    passed: [],
-    upcoming: [
-      {queue: "10:00", message: "a"},
-    ]
-  };
-
-  mc(schedule, messages, musicPlayer);
-  t.true(musicPlayer._playing);
-  t.false(browser.document.documentElement.classList.contains("state-alert"));
-
-  assertTimeout(t, 0);
-
-  t.is(alertAudio.src, "audio/messages/vignette.ogg");
-  t.is(alertText.textContent, "...");
-  t.true(browser.document.documentElement.classList.contains("state-alert"));
-  t.false(musicPlayer._playing);
-
-  alertAudio._emitter.emit("ended");
-  await awaitAsync();
-
-  t.is(alertAudio.src, "audio/message-a.mp3");
-  t.is(alertText.textContent, "Message a");
-  t.true(browser.document.documentElement.classList.contains("state-alert"));
-  t.false(musicPlayer._playing);
-
-  alertAudio._emitter.emit("ended");
-  await awaitAsync();
-
-  assertTimeout(t, 500);
-  await awaitAsync();
-
-  t.false(browser.document.documentElement.classList.contains("state-alert"));
-});
-
-//
-// test("queues next key track", () => {
-//   let currentTrack;
-//   const keyTracks = [
-//     ["10:00", "a"],
-//     ["11:00", "b"],
-//     ["11:30", "c"],
-//   ];
-//   ck.freeze(`${today} 08:00`);
-//   mc(keyTracks, track => currentTrack = track);
-//
-//   ck.freeze(`${today} 10:10`);
-//   assertTimeout(t, 120 * minute);
-//   t.is(currentTrack, "a");
-//
-//   ck.freeze(`${today} 11:10`);
-//   assertTimeout(t, 50 * minute);
-//   t.is(currentTrack, "b");
-//
-//   ck.freeze(`${today} 11:31`);
-//   assertTimeout(t, 20 * minute);
-//   t.is(currentTrack, "c");
-//
-//   t.is(timeouts.length, 0);
-// });
-//
-// test("schedule can seep in to tomorrow", () => {
-//   let currentTrack;
-//   const keyTracks = [
-//     ["a", "22:00"],
-//     ["b", "01:00"],
-//   ];
-//   ck.freeze(`${today} 22:00`);
-//   mc(keyTracks, track => currentTrack = track);
-//
-//   ck.freeze(`${today} 22:10`);
-//   assertTimeout(t, 0);
-//   t.is(currentTrack, "a");
-//
-//   assertTimeout(t, 170 * minute);
-//   t.is(currentTrack, "b");
-// });
-
-function assertTimeout (t, expectedTimeout) {
-  t.is(timeouts.length, 1);
-  const [fn, timeout] = timeouts.pop();
-
-  t.is(expectedTimeout, timeout);
-  fn();
-}
-
-function awaitAsync () {
-  return new Promise(r => setTimeout(r));
 }

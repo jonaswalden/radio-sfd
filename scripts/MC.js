@@ -11,6 +11,7 @@ export default function MC (schedule, messages, musicPlayer) {
   }
 
   function queueNext () {
+    document.documentElement.classList.toggle('state-alert-repeatable', !!schedule.passed.length);
     const [upcoming] = schedule.upcoming;
     if (!upcoming) return;
 
@@ -29,10 +30,10 @@ export default function MC (schedule, messages, musicPlayer) {
     const last = schedule.passed[schedule.passed.length - 1];
     if (!last) return;
 
-    play(last.message);
+    play(last.message, true);
   }
 
-  async function play (messageId) {
+  async function play (messageId, skipQueueNext) {
     const message = messages[messageId];
     if (!message) return;
 
@@ -45,6 +46,8 @@ export default function MC (schedule, messages, musicPlayer) {
 
     toggleAlertState(false);
     musicPlayer.resume();
+    if (skipQueueNext) return; 
+
     queueNext();
 
     function playVignette () {

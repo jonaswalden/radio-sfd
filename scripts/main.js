@@ -5,19 +5,23 @@ import MC from './MC.js';
 import MusicPlayer from './MusicPlayer.js';
 import Playlist from './Playlist.js';
 
-start();
+(async config => {
+  ['tracks', 'scheduleUrl', 'today', 'tonight', 'messagesUrl']
+    .forEach(key => {
+      if (key in config) return;
+      throw `requiring config "${key}"`;
+    });
 
-async function start () {
-  const playlist = Playlist(window.tracks);
+  const playlist = Playlist(config.tracks);
   const musicPlayer = MusicPlayer(playlist);
   musicPlayer.start();
 
   const [schedule, messages] = await Promise.all([
-    fetchSchedule(window.scheduleUrl),
-    fetchMessages(window.messagesUrl),
+    fetchSchedule(config.scheduleUrl, config.today, config.tonight),
+    fetchMessages(config.messagesUrl),
   ]);
 
   const mc = MC(schedule, messages, musicPlayer);
   mc.start();
   controls(musicPlayer, mc);
-}
+})(window.config || {});
