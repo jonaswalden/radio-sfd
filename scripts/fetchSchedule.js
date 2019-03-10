@@ -35,7 +35,7 @@ export default function fetchSchedule (url, today, tonight) {
         queue = dateFromString(queueString);
       }
 
-      return Object.assign({}, item, {queue});
+      return Object.assign({}, item, {queue, queueString});
     }
 
     function dateFromString (queueString) {

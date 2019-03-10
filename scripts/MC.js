@@ -21,7 +21,7 @@ export default function MC (schedule, messages, musicPlayer) {
     window.setTimeout(playNext, timeout);
 
     function playNext () {
-      play(upcoming.message);
+      play(upcoming);
       schedule.passed.push(schedule.upcoming.shift());
     }
   }
@@ -30,11 +30,11 @@ export default function MC (schedule, messages, musicPlayer) {
     const last = schedule.passed[schedule.passed.length - 1];
     if (!last) return;
 
-    play(last.message, true);
+    play(last, true);
   }
 
-  async function play (messageId, skipQueueNext) {
-    const message = messages[messageId];
+  async function play (queueItem, skipQueueNext) {
+    const message = messages[queueItem.message];
     if (!message) return;
 
     toggleAlertState(true);
@@ -46,14 +46,14 @@ export default function MC (schedule, messages, musicPlayer) {
 
     toggleAlertState(false);
     musicPlayer.resume();
-    if (skipQueueNext) return; 
+    if (skipQueueNext) return;
 
     queueNext();
 
     function playVignette () {
       setAudioSource(audio, vignetteAudio);
       audio.play();
-      text.textContent = '...';
+      text.innerHTML = `<time>${queueItem.queueString}</time>`;
 
       return new Promise(resolve => {
         audio.addEventListener('ended', resolve, {once: true});
