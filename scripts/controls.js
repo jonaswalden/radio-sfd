@@ -4,15 +4,19 @@ export default function controls (musicPlayer, mc) {
 
   pauseMusicButton.addEventListener('click', musicPlayer.pause);
   playMusicButton.addEventListener('click', musicPlayer.resume);
-  window.addEventListener('keyup', KeyboardListener(' ', musicPlayer.pauseResume));
-
   repeatAlertButton.addEventListener('click', mc.repeatLast);
-  window.addEventListener('keyup', KeyboardListener('backspace', mc.repeatLast));
 
-  function KeyboardListener (which, callback) {
+  window.addEventListener('keyup', KeyboardListener({
+    ' ': musicPlayer.pauseResume,
+    'Backspace': mc.repeatLast,
+  }));
+
+  function KeyboardListener (map) {
     return function keyboardListener (event) {
-      if (event.which !== which) return;
-      callback();
+      const callback = map[event.key];
+      if (!callback) return;
+
+      callback(event);
     }
   }
 }
