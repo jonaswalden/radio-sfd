@@ -25,7 +25,7 @@ Feature('Playback', () => {
 
     And('messages are available', () => {
       config.messagesUrl = 'https://cdn.radio-sfd/messages.csv';
-      
+
       const messagesCSV = '' +
         'id,audio,text\n' +
         'msg-a,http://cdn.radio-sfd/msg-a-audio.mp3,First message A\n' +
@@ -39,7 +39,7 @@ Feature('Playback', () => {
 
     And('schedule is available', () => {
       config.scheduleUrl = 'https://cdn.radio-sfd/schedule.csv';
-      
+
       const scheduleCSV = '' +
         'queue,message\n' +
         '10:00,msg-a\n' +
@@ -123,12 +123,12 @@ Feature('Playback', () => {
     });
 
     let alertText;
-    And('message A is introduced by a vignette', () => {
+    And('message A is introduced by a vignette and its timestamp', () => {
       assert.equal(alert.src, 'audio/messages/vignette.ogg', 'not vignette audio source');
       assert.equal(alert._playing, true, 'vignette not playing');
 
       [alertText] = browser.document.getElementsByClassName('alert-player__text');
-      assert.equal(alertText.textContent, '...', 'unexpected alert text');
+      assert.equal(alertText.textContent, '10:00', 'unexpected alert text');
     });
 
     And('message A is played', async () => {

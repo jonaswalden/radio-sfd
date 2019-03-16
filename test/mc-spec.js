@@ -53,7 +53,7 @@ describe('MC', () => {
         const schedule = {
           passed: [],
           upcoming: [
-            {queue: soon, message: 'a'},
+            {queue: soon, queueString: '10:10', message: 'a'},
           ],
         };
         MC(schedule, messages, MockMusicPlayer()).start();
@@ -83,7 +83,7 @@ describe('MC', () => {
         const schedule = {
           passed: [],
           upcoming: [
-            {queue: now, message: 'a'},
+            {queue: now, queueString: '10:00', message: 'a'},
           ],
         };
         MC(schedule, messages, musicPlayer = MockMusicPlayer()).start();
@@ -102,7 +102,7 @@ describe('MC', () => {
 
       then('it is introduced with a vignette', async () => {
         assert.equal(alertAudio.src, 'audio/messages/vignette.ogg');
-        assert.equal(alertText.textContent, '...');
+        assert.equal(alertText.textContent, '10:00');
         assert.equal(browser.document.documentElement.classList.contains('state-alert'), true);
         assert.equal(musicPlayer._playing, false);
 
@@ -138,7 +138,7 @@ describe('MC', () => {
       it('sets repeatable state when passed events', () => {
         const schedule = {
           passed:  [
-            {queue: now, message: 'a'},
+            {queue: now, queueString: '10:00', message: 'a'},
           ],
           upcoming: [],
         };
@@ -176,23 +176,23 @@ describe('MC', () => {
       before('starts', () => {
         const schedule = {
           passed: [
-            {queue: recently, message: 'a'},
+            {queue: recently, queueString: '09:50', message: 'a'},
           ],
           upcoming: [
-            {queue: soon, message: 'b'},
+            {queue: soon, queueString: '10:10', message: 'b'},
           ],
         };
         mc = MC(schedule, messages, musicPlayer = MockMusicPlayer());
         mc.start();
       });
-      
+
       when('repeatLast is called', () => {
         mc.repeatLast();
       });
 
-      then('last passed message A is played', async () => { 
+      then('last passed message A is played', async () => {
         assert.equal(alertAudio.src, 'audio/messages/vignette.ogg');
-        assert.equal(alertText.textContent, '...');
+        assert.equal(alertText.textContent, '09:50');
         assert.equal(browser.document.documentElement.classList.contains('state-alert'), true);
         assert.equal(musicPlayer._playing, false);
 
