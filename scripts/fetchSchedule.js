@@ -5,7 +5,7 @@ export default function fetchSchedule (url, today, tonight) {
     .then(data => data.text())
     .then(csvToArray)
     .catch(err => {
-      console.warn('Error fetching schedule', err);
+      console.warn('Error fetching schedule', err); // eslint-disable-line no-console
       return [];
     })
     .then(removeEmpty)
