@@ -11,7 +11,15 @@ export default function fetchMessages (url) {
     .then(toObject);
 
   function toObject (messageList) {
-    return messageList.reduce(listToObject, {});
+    return messageList
+      .map(addAudio)
+      .reduce(listToObject, {});
+
+    function addAudio (message) {
+      return Object.assign({}, message, {
+        audio: `audio/messages/${message.id}.mp3`,
+      });
+    }
 
     function listToObject (obj, message) {
       obj[message.id] = message;
